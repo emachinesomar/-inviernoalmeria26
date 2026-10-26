@@ -156,7 +156,7 @@ function testDoPost() {
       tutor_nombre: 'María García López (Tutor de Prueba)',
       tutor_dni: '12345678Z',
       tutor_telefono: '612345678',
-      tutor_email: Session.getActiveUser().getEmail(),
+      tutor_email: Session.getActiveUser().getEmail() || 'omarmonasterio19@gmail.com', 
       coste_material: '10€',
       donacion_voluntaria: '10€',
       total_estimado: '20€',
