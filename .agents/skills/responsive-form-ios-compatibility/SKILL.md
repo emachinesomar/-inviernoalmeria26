@@ -203,7 +203,70 @@ Para evitar que bots maliciosos envíen formularios masivos y prevenir envíos d
 
 ---
 
-## 11. Checklist de Verificación Responsive, iOS y Seguridad
+## 11. Portapapeles Seguro y Robusto en iOS Safari
+
+La API moderna `navigator.clipboard.writeText()` puede fallar o estar deshabilitada en versiones antiguas de iOS (iOS 12 o 13) o en páginas servidas sin HTTPS estricto o dentro de iframes.
+
+### Función Universal de Copiado (con Fallback):
+```javascript
+function copiarTextoAlPortapapeles(texto, onExito, onError) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(texto)
+            .then(onExito)
+            .catch(() => fallbackCopiar(texto, onExito, onError));
+    } else {
+        fallbackCopiar(texto, onExito, onError);
+    }
+}
+
+function fallbackCopiar(texto, onExito, onError) {
+    var textArea = document.createElement("textarea");
+    textArea.value = texto;
+    // Evitar que el teclado virtual de iOS se abra al crear el textarea
+    textArea.style.position = "fixed";
+    textArea.style.top = "-9999px";
+    textArea.style.left = "-9999px";
+    textArea.setAttribute("readonly", "");
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        var copiado = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (copiado) onExito(); else onError();
+    } catch (err) {
+        document.body.removeChild(textArea);
+        if (onError) onError();
+    }
+}
+```
+
+---
+
+## 12. Gestor Dinámico de Participantes y Cálculo Reactivo en Tiempo Real
+
+Para formularios familiares donde se añaden participantes dinámicamente:
+1. **Delegación de Eventos en el DOM:** Escuchar cambios en el contenedor padre (`change` o `input`) en lugar de añadir escuchadores individuales a cada campo nuevo.
+2. **Cálculo de Edad Seguro en JavaScript:**
+   ```javascript
+   function calcularEdad(fechaNacimientoStr) {
+       if (!fechaNacimientoStr) return null;
+       const hoy = new Date();
+       const nac = new Date(fechaNacimientoStr);
+       let edad = hoy.getFullYear() - nac.getFullYear();
+       const mes = hoy.getMonth() - nac.getMonth();
+       if (mes < 0 || (mes === 0 && hoy.getDate() < nac.getDate())) {
+           edad--;
+       }
+       return edad;
+   }
+   ```
+3. **Cálculo de Totales sin Bloqueo de UI:** Recalcular siempre mediante una función pura (`actualizarResumenEconomico()`) invocada tras añadir/eliminar participante o cambiar importes.
+
+---
+
+## 13. Checklist de Verificación Responsive, iOS y Seguridad
 
 Antes de publicar cualquier formulario:
 
@@ -216,4 +279,6 @@ Antes de publicar cualquier formulario:
 - [ ] ¿El contenedor principal tiene un `max-w-*` centrado para verse elegante en iPad y monitores grandes?
 - [ ] ¿Está presente la verificación de seguridad anti-bot (Captcha visible + Honeypot invisible)?
 - [ ] ¿El botón de envío se bloquea durante el proceso y se mantiene bloqueado hasta que el formulario se limpia por completo?
+- [ ] ¿La función de copiar al portapapeles cuenta con fallback seguro para Safari antiguo?
+- [ ] ¿Los cálculos económicos se actualizan automáticamente en tiempo real sin lag en dispositivos móviles?
 

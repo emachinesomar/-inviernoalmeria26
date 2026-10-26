@@ -71,27 +71,65 @@ Los mensajes de error deben ser **claros, empáticos y constructivos**, evitando
 
 ---
 
-## 5. Plantillas de Confirmación y Correos Electrónicos
+## 5. Redacción de Aportaciones Económicas y Donaciones
 
-Al redactar correos automáticos posteriores al envío de un formulario:
+En eventos y actividades sin ánimo de lucro o comunitarias, la redacción sobre aspectos financieros debe transmitir total transparencia, gratuidad del acceso y respeto hacia las posibilidades de cada familia:
 
-1. **Saludo neutro:**
-   - *"Estimado/a [Nombre]:"* o *"Hola, [Nombre]:"*
-2. **Cuerpo del mensaje:**
-   - *"Te confirmamos que hemos recibido la inscripción para el [Nombre del Evento]. A continuación encontrarás el resumen de tu solicitud y las instrucciones para los siguientes pasos:"*
-3. **Resumen y fecha límite:**
-   - Usar formato de fecha universal: *"30 de diciembre a las 17:00 h (5:00 PM)"*. Indicar tanto el formato de 24 horas como la indicación AM/PM para evitar confusiones horarias.
-4. **Despedida institucional:**
-   - *"Agradecemos tu confianza y colaboración comunitaria. Quedamos a tu disposición para cualquier consulta en [correo de contacto]."*
+1. **Claridad en la gratuidad del acceso:**
+   - ✅ *"Asistencia al campus / evento: ¡Totalmente gratuita!"*
+   - Evitar ambigüedades como *"Evento casi gratis"* o *"Entrada libre sujeta a pago"*.
+2. **Diferenciación entre coste de material y donación:**
+   - **Coste de material:** Explicar con precisión el destino: *"Material de talleres (5€ por participante registrado)"*.
+   - **Donación voluntaria:** Resaltar siempre su carácter opcional: *"Donación voluntaria de apoyo al proyecto (opcional: elija el importe que desee aportar)"*.
+3. **Instrucciones de abono (Bizum, efectivo o transferencia):**
+   - Indicar siempre el concepto exacto a escribir para evitar extravío de pagos:
+     - ✅ *"Al realizar el abono por Bizum, indique en el concepto: '[Localizador] - [Nombre del tutor]'."*
+   - Si se permite pago en persona:
+     - ✅ *"En efectivo: Puede abonarse el primer día del evento (les solicitamos acudir 15 minutos antes del inicio)."*
 
 ---
 
-## 6. Lista de Verificación (Checklist)
+## 6. Cláusulas de Convivencia y Cuidado de Menores
+
+Las normativas y autorizaciones deben redactarse en tono afirmativo, corresponsable y formativo:
+
+1. **Acompañamiento obligatorio para menores en etapa infantil:**
+   - ❌ *Evitar tono punitivo:* *"Prohibido dejar a los niños solos o serán expulsados."*
+   - ✅ *Tono formativo y seguro:* *"Los participantes de la etapa infantil (3 a 5 años) deben asistir siempre acompañados de un adulto responsable que permanecerá durante las 5 horas del campus para garantizar su bienestar y seguridad."*
+2. **Uso de imagen y actividades:**
+   - ✅ *"Autorizo la toma de fotografías y vídeos durante las actividades con fines estrictamente formativos, pedagógicos y comunitarios."*
+3. **Atención médica y alergias:**
+   - ✅ *"Autorizo la atención de primeros auxilios y el traslado al centro de salud más cercano en caso de requerirse durante el desarrollo del campus."*
+
+---
+
+## 7. Plantillas de Confirmación y Correos Electrónicos
+
+Al redactar correos automáticos posteriores al envío de un formulario:
+
+1. **Regla Anti-Mojibake (Sin emojis de 4 bytes en correos):**
+   - Nunca incluir emojis como `📅`, `🎉`, `👥`, `💳`, `🤝` en el texto del asunto ni en el cuerpo del correo.
+   - En muchos gestores de correo y sistemas operativos antiguos, estos caracteres se corrompen en rombos negros con signo de interrogación (``).
+   - Usar en su lugar **encabezados claros en mayúsculas**, **viñetas estándar (`•`, `-`)** y **etiquetas visuales en HTML**.
+2. **Saludo neutro:**
+   - *"Estimado/a [Nombre]:"* o *"Hola, [Nombre]:"*
+3. **Cuerpo del mensaje:**
+   - *"Hemos registrado correctamente la inscripción para el [Nombre del Evento]. Nos alegra enormemente contar con su participación para construir comunidad en estos días de convivencia."*
+4. **Resumen y fecha límite:**
+   - Usar formato de fecha universal: *"30 de diciembre a las 17:00 h (5:00 PM)"*. Indicar tanto el formato de 24 horas como la indicación AM/PM para evitar confusiones horarias.
+5. **Despedida institucional:**
+   - *"Agradecemos su confianza y colaboración comunitaria. Quedamos a su disposición para cualquier consulta en [correo de contacto]."*
+
+---
+
+## 8. Lista de Verificación (Checklist)
 
 Antes de dar por finalizado un formulario o página web, comprueba:
 
 - [ ] ¿Hay términos como "móvil" que deban clarificarse como "teléfono móvil"?
 - [ ] ¿Se han evitado conjugaciones en *vosotros* (*haced*, *venid*, *tenéis*) sustituyéndolas por fórmulas neutras impersonales o *ustedes*?
 - [ ] ¿Los campos legales (DNI/cédula, autorizaciones médicas, uso de imagen) son entendibles para familias de cualquier nacionalidad?
-- [ ] ¿Las horas están indicadas claramente (ej. `17:00 h / 5:00 PM`)?
-- [ ] ¿Los mensajes de ayuda orientan al usuario con un ejemplo visual (`Ej. Juan Pérez`)?
+- [ ] ¿Las horas están indicadas claramente en formato dual (ej. `17:00 h (5:00 PM)`)?
+- [ ] ¿Los aspectos económicos diferencian con total claridad el coste de material de las donaciones voluntarias?
+- [ ] ¿El correo transaccional está libre de emojis crudos que puedan generar caracteres extraños en los clientes de los destinatarios?
+- [ ] ¿Los mensajes de ayuda orientan al usuario con un ejemplo visual claro (`Ej. Juan Pérez`)?
