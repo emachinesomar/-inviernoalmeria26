@@ -125,6 +125,39 @@
             border-color: #2563eb;
         }
 
+        /* Estilos de Error Visual Inconfundibles */
+        .field-error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+            background-color: #fef2f2 !important;
+        }
+
+        .field-error-text {
+            color: #dc2626 !important;
+            font-size: 0.78rem !important;
+            font-weight: 600 !important;
+            margin-top: 0.35rem !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.35rem !important;
+            animation: fadeInError 0.25s ease-in-out;
+        }
+
+        @keyframes fadeInError {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .shake-field {
+            animation: shakeError 0.45s ease-in-out;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -609,26 +642,32 @@
                     <!-- Check 1: Compromiso de Convivencia -->
                     <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white">
                         <input type="checkbox" id="compromiso" name="compromiso" required class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
-                        <label for="compromiso" class="text-sm font-semibold text-slate-800 cursor-pointer">
-                            He leído y me comprometo a cumplir (y que los participantes cumplan) los compromisos de convivencia. *
-                        </label>
+                        <div class="flex-1">
+                            <label for="compromiso" class="text-sm font-semibold text-slate-800 cursor-pointer block">
+                                He leído y me comprometo a cumplir (y que los participantes cumplan) los compromisos de convivencia. *
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Check 2: Ropa adecuada para talleres -->
                     <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white">
                         <input type="checkbox" id="check_camiseta" name="check_camiseta" required class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
-                        <label for="check_camiseta" class="text-sm font-semibold text-slate-800 cursor-pointer">
-                            Compromiso de vestimenta: Los participantes asistirán con ropa cómoda apta para manualidades y actividades prácticas. *
-                        </label>
+                        <div class="flex-1">
+                            <label for="check_camiseta" class="text-sm font-semibold text-slate-800 cursor-pointer block">
+                                Compromiso de vestimenta: Los participantes asistirán con ropa cómoda apta para manualidades y actividades prácticas. *
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Check 3: Acompañamiento infantil condicional (si hay niños de 3-5 años) -->
                     <div id="check_infantil_box" class="hidden p-3.5 rounded-xl border border-amber-200 bg-amber-50">
                         <div class="flex items-start gap-3">
                             <input type="checkbox" id="check_infantil" name="check_infantil" class="w-5 h-5 mt-0.5 rounded text-amber-600 focus:ring-amber-500 border-amber-300">
-                            <label for="check_infantil" class="text-sm font-semibold text-amber-900 cursor-pointer">
-                                Compromiso obligatorio Etapa Infantil: Entiendo y acepto que el menor de etapa infantil asistirá permanentemente acompañado de un adulto las 5 horas del campus. *
-                            </label>
+                            <div class="flex-1">
+                                <label for="check_infantil" class="text-sm font-semibold text-amber-900 cursor-pointer block">
+                                    Compromiso obligatorio Etapa Infantil: Entiendo y acepto que el menor de etapa infantil asistirá permanentemente acompañado de un adulto las 5 horas del campus. *
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -655,9 +694,11 @@
                     <!-- Check 5: Autorización médica y de participación -->
                     <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white">
                         <input type="checkbox" id="check_medico" name="check_medico" required class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
-                        <label for="check_medico" class="text-sm font-semibold text-slate-800 cursor-pointer">
-                            Autorización médica y de participación: Autorizo la asistencia del menor al campus y faculto a los coordinadores a tomar las medidas sanitarias o médicas de urgencia oportunas en caso necesario. *
-                        </label>
+                        <div class="flex-1">
+                            <label for="check_medico" class="text-sm font-semibold text-slate-800 cursor-pointer block">
+                                Autorización médica y de participación: Autorizo la asistencia del menor al campus y faculto a los coordinadores a tomar las medidas sanitarias o médicas de urgencia oportunas en caso necesario. *
+                            </label>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1126,6 +1167,8 @@
             generarCaptcha();
 
             // 8. Ocultar todos los avisos de error y bordes rojos
+            document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error', 'shake-field'));
+            document.querySelectorAll('.field-error-text').forEach(el => el.remove());
             document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
             document.querySelectorAll('[id^="err-"]').forEach(el => el.classList.add('hidden'));
 
@@ -1168,6 +1211,45 @@
             showToast('Nuevo código de seguridad generado.', 'info');
         });
 
+        // Limpieza reactiva de errores en tiempo real al escribir o seleccionar
+        form.addEventListener('input', (e) => {
+            const el = e.target;
+            const contenedor = el.closest('.field-box') || el;
+            contenedor.classList.remove('field-error', 'shake-field');
+            const parent = contenedor.parentElement;
+            if (parent) {
+                const msg = parent.querySelector('.field-error-text');
+                if (msg) msg.remove();
+            }
+            if (el.id) {
+                const preErr = document.getElementById('err-' + el.id);
+                if (preErr) preErr.classList.add('hidden');
+            }
+            const card = el.closest('.rounded-xl.border, div.border');
+            if (card) {
+                card.classList.remove('field-error', 'shake-field');
+                const cardMsg = card.querySelector('.field-error-text');
+                if (cardMsg) cardMsg.remove();
+            }
+        });
+
+        form.addEventListener('change', (e) => {
+            const el = e.target;
+            const contenedor = el.closest('.field-box') || el;
+            contenedor.classList.remove('field-error', 'shake-field');
+            const parent = contenedor.parentElement;
+            if (parent) {
+                const msg = parent.querySelector('.field-error-text');
+                if (msg) msg.remove();
+            }
+            const card = el.closest('.rounded-xl.border, div.border');
+            if (card) {
+                card.classList.remove('field-error', 'shake-field');
+                const cardMsg = card.querySelector('.field-error-text');
+                if (cardMsg) cardMsg.remove();
+            }
+        });
+
         // Inicializar con 1 participante por defecto y código Captcha al cargar el DOM
         document.addEventListener('DOMContentLoaded', () => {
             createParticipantCard();
@@ -1187,47 +1269,160 @@
             }
 
             // 2. Limpiar errores visuales previos
+            document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error', 'shake-field'));
+            document.querySelectorAll('.field-error-text').forEach(el => el.remove());
             document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
             document.querySelectorAll('[id^="err-"]').forEach(el => el.classList.add('hidden'));
 
             let valid = true;
 
-            // Validar campos requeridos nativos
-            const requiredFields = form.querySelectorAll('[required]');
-            for (let field of requiredFields) {
-                if (field.type === 'checkbox' && !field.checked) {
-                    field.classList.add('border-red-500');
-                    valid = false;
-                } else if (field.type === 'radio') {
-                    const groupName = field.name;
-                    const radioChecked = form.querySelector(`input[name="${groupName}"]:checked`);
-                    if (!radioChecked) {
-                        valid = false;
-                        showToast(`Por favor, selecciona una opción en las autorizaciones obligatorias.`, 'error');
-                        break;
-                    }
-                } else if (!field.value || field.value.trim() === '') {
-                    field.classList.add('border-red-500');
-                    const errEl = document.getElementById(`err-${field.id}`);
-                    if (errEl) errEl.classList.remove('hidden');
-                    valid = false;
+            // Funciones auxiliares para marcar errores claramente visibles con borde rojo, sombra y mensaje
+            function marcarErrorCampo(campo, mensaje) {
+                if (!campo) return;
+                valid = false;
+                const contenedor = campo.closest('.field-box') || campo;
+                contenedor.classList.add('field-error');
+                
+                const parent = contenedor.parentElement;
+                let errorMsg = parent.querySelector('.field-error-text');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('p');
+                    errorMsg.className = 'field-error-text';
+                    errorMsg.innerHTML = '<i class="fas fa-exclamation-circle text-red-500"></i> <span>' + mensaje + '</span>';
+                    parent.appendChild(errorMsg);
+                } else {
+                    errorMsg.querySelector('span').textContent = mensaje;
+                    errorMsg.classList.remove('hidden');
                 }
             }
 
-            // 3. Validar Código de Seguridad Anti-Bot (Captcha)
-            const inputVal = captchaInput.value.trim().toUpperCase();
-            if (inputVal !== codigoCaptchaActual) {
-                captchaInput.classList.add('border-red-500');
-                errCaptcha.classList.remove('hidden');
+            function marcarErrorCard(card, mensaje) {
+                if (!card) return;
                 valid = false;
-                showToast('El código de seguridad anti-bot no coincide.', 'error');
-                generarCaptcha();
-            } else {
-                captchaInput.classList.remove('border-red-500');
-                errCaptcha.classList.add('hidden');
+                card.classList.add('field-error');
+                const targetContainer = card.querySelector('.flex-1') || card;
+                let errorMsg = targetContainer.querySelector('.field-error-text');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('p');
+                    errorMsg.className = 'field-error-text';
+                    errorMsg.innerHTML = '<i class="fas fa-exclamation-circle text-red-500"></i> <span>' + mensaje + '</span>';
+                    targetContainer.appendChild(errorMsg);
+                } else {
+                    errorMsg.querySelector('span').textContent = mensaje;
+                    errorMsg.classList.remove('hidden');
+                }
             }
 
+            // A. Validar Participantes
+            const participantCards = document.querySelectorAll('.participant-card');
+            if (participantCards.length === 0) {
+                showToast('Debe haber al menos un participante registrado.', 'error');
+                return;
+            }
+
+            participantCards.forEach((card, idx) => {
+                const nameInput = card.querySelector('.participant-name');
+                const birthInput = card.querySelector('.participant-birthdate');
+                const groupSelect = card.querySelector('.participant-group-select');
+                const infantilBox = card.querySelector('.infantil-acompanante-box');
+                const adultoInput = card.querySelector('.participant-adulto-input');
+
+                if (!nameInput.value || nameInput.value.trim() === '') {
+                    marcarErrorCampo(nameInput, 'Introduce el nombre completo del participante ' + (idx + 1));
+                }
+                if (!birthInput.value) {
+                    marcarErrorCampo(birthInput, 'Indica la fecha de nacimiento del participante ' + (idx + 1));
+                }
+                if (!groupSelect.value || groupSelect.value === '') {
+                    marcarErrorCampo(groupSelect, 'Selecciona un grupo para el participante ' + (idx + 1));
+                }
+                if (groupSelect.value && groupSelect.value.includes('Infantil')) {
+                    if (!adultoInput.value || adultoInput.value.trim() === '') {
+                        marcarErrorCampo(adultoInput, 'Indica el adulto que acompañará al menor durante las 5 horas del campus');
+                        infantilBox.classList.add('field-error');
+                    }
+                }
+            });
+
+            // B. Validar Datos del Tutor
+            const tutorNombre = document.getElementById('tutor_nombre');
+            const tutorDni = document.getElementById('tutor_dni');
+            const tutorTelefono = document.getElementById('tutor_telefono');
+            const tutorEmail = document.getElementById('tutor_email');
+
+            if (!tutorNombre.value || tutorNombre.value.trim() === '') {
+                marcarErrorCampo(tutorNombre, 'Introduce el nombre completo del tutor/a o representante legal');
+            }
+            if (!tutorDni.value || tutorDni.value.trim() === '') {
+                marcarErrorCampo(tutorDni, 'Introduce un documento de identidad válido (DNI / NIE / Pasaporte)');
+            }
+            if (!tutorTelefono.value || tutorTelefono.value.trim() === '') {
+                marcarErrorCampo(tutorTelefono, 'Introduce un teléfono de contacto válido');
+            }
+            if (!tutorEmail.value || !tutorEmail.value.includes('@') || tutorEmail.value.trim().length < 5) {
+                marcarErrorCampo(tutorEmail, 'Introduce un correo electrónico válido para recibir la confirmación');
+            }
+
+            // C. Validar Camiseta si se solicita
+            if (camisetaSi.checked) {
+                if (!selectTalla.value || selectTalla.value === '') {
+                    marcarErrorCampo(selectTalla, 'Por favor, selecciona una talla de camiseta');
+                }
+            }
+
+            // D. Validar Autorizaciones Obligatorias
+            const checkCompromiso = document.getElementById('compromiso');
+            if (!checkCompromiso.checked) {
+                marcarErrorCard(checkCompromiso.closest('div.border'), 'Debes aceptar los compromisos de convivencia para participar');
+            }
+
+            const checkCamisetaBlanca = document.getElementById('check_camiseta');
+            if (!checkCamisetaBlanca.checked) {
+                marcarErrorCard(checkCamisetaBlanca.closest('div.border'), 'Debes aceptar el compromiso de vestimenta y ropa para talleres');
+            }
+
+            // Compromiso Etapa Infantil (si aplica)
+            if (!checkInfantilBox.classList.contains('hidden')) {
+                if (!checkInfantil.checked) {
+                    marcarErrorCard(checkInfantilBox, 'Obligatorio en Etapa Infantil: Confirma el acompañamiento adulto permanente de 5h');
+                }
+            }
+
+            // Autorización de Imagen (Radio)
+            const radioImagenChecked = form.querySelector('input[name="autoriza_imagen"]:checked');
+            const radioImagenCard = form.querySelector('input[name="autoriza_imagen"]').closest('.rounded-xl.border');
+            if (!radioImagenChecked) {
+                marcarErrorCard(radioImagenCard, 'Por favor, selecciona si autorizas o no la toma de imágenes');
+            }
+
+            // Autorización Médica
+            const checkMedico = document.getElementById('check_medico');
+            if (!checkMedico.checked) {
+                marcarErrorCard(checkMedico.closest('div.border'), 'Es obligatoria la autorización médica y de primeros auxilios');
+            }
+
+            // E. Validar Código de Seguridad Anti-Bot (Captcha)
+            const inputVal = captchaInput.value.trim().toUpperCase();
+            if (!inputVal) {
+                marcarErrorCampo(captchaInput, 'Introduce el código de seguridad de 4 caracteres');
+            } else if (inputVal !== codigoCaptchaActual) {
+                marcarErrorCampo(captchaInput, 'El código de seguridad no coincide. Inténtalo de nuevo');
+                generarCaptcha();
+            }
+
+            // F. Si hay algún campo inválido: SCROLL AUTOMÁTICO AL PRIMER ERROR Y VIBRACIÓN
             if (!valid) {
+                const primerError = form.querySelector('.field-error');
+                if (primerError) {
+                    primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    primerError.classList.add('shake-field');
+                    setTimeout(() => primerError.classList.remove('shake-field'), 700);
+
+                    const focusable = primerError.matches('input, select, textarea') ? primerError : primerError.querySelector('input, select, textarea');
+                    if (focusable) {
+                        try { focusable.focus({ preventScroll: true }); } catch (err) {}
+                    }
+                }
                 showToast('Por favor, revisa los campos señalados en rojo antes de enviar.', 'error');
                 return;
             }
