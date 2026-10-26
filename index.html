@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>Campus de Navidad 2026 · Construyendo Comunidad</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="description" content="Inscripción al Campus de Navidad 2026 - Una experiencia formativa y comunitaria para niños y jóvenes">
+    <meta name="keywords" content="Campus, Navidad, Invierno, Almería, 2026, Niños, Prejóvenes, Voluntariado, Asociación">
+    <meta name="author" content="Asociación Sin Ánimo de Lucro">
+    <meta name="robots" content="index, follow">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        festive: {
+                            gold: '#f59e0b',
+                            amber: '#d97706',
+                            emerald: '#059669',
+                            ice: '#e0f2fe'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #2563eb;
+            --accent: #f59e0b;
+            --ice-bg: #f8fafc;
+        }
+
+        /* Compatibilidad iOS y reseteo WebKit */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(180deg, #f0f7ff 0%, #f8fafc 100%);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            min-height: 100dvh;
+            color: #1e293b;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-left: env(safe-area-inset-left, 0px);
+            padding-right: env(safe-area-inset-right, 0px);
+        }
+
+        /* Regla de oro iOS: mínimo 16px en pantallas móviles para evitar auto-zoom molesto en Safari */
+        @media screen and (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        input, textarea, select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .hero-pattern {
+            background-color: #1e3a8a;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(245, 158, 11, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.3) 0%, transparent 60%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 10px 35px -5px rgba(15, 23, 42, 0.07), 0 0 0 1px rgba(15, 23, 42, 0.02);
+        }
+
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #1e3a8a;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 3px 10px rgba(30, 58, 138, 0.25);
+        }
+
+        .field-box {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .field-box:focus-within {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #2563eb;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            transform: translateY(150%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 90vw;
+            width: 400px;
+        }
+
+        .toast-notification.active {
+            transform: translateY(0);
+        }
+
+        /* Snowflake micro-animation */
+        @keyframes snowfall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .snowflake {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            pointer-events: none;
+            user-select: none;
+            animation: snowfall 8s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Barra Superior de la Asociación -->
+    <header class="hero-pattern text-white relative overflow-hidden pb-16 pt-10">
+        <!-- Copos decorativos discretos -->
+        <div class="snowflake" style="left: 10%; animation-duration: 9s; animation-delay: 1s;"><i class="fas fa-snowflake"></i></div>
+        <div class="snowflake" style="left: 30%; animation-duration: 11s; animation-delay: 3s;"><i class="fas fa-snowflake"></i></div>
+        <div class="snowflake" style="left: 70%; animation-duration: 8s; animation-delay: 0s;"><i class="fas fa-snowflake"></i></div>
+        <div class="snowflake" style="left: 88%; animation-duration: 12s; animation-delay: 2s;"><i class="fas fa-snowflake"></i></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-semibold tracking-wide text-festive-ice mb-4">
+                <i class="fas fa-heart text-red-400"></i> Asociación Sin Ánimo de Lucro
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-white">
+                Campus de Navidad 2026
+            </h1>
+            <p class="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto mb-6 font-normal leading-relaxed">
+                Un espacio comunitario de crecimiento, amistad, valores y diversión para niños y jóvenes durante las vacaciones de invierno.
+            </p>
+
+            <!-- Grid de Fechas y Claves del Evento -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto text-left mt-6">
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-blue-500/30 flex items-center justify-center text-xl text-yellow-300 flex-shrink-0">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs text-blue-200 block uppercase font-bold tracking-wider">Fechas del Campus</span>
+                        <span class="text-sm font-semibold text-white">23, 24, 28, 29 y 30 Dic</span>
+                    </div>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-amber-500/30 flex items-center justify-center text-xl text-yellow-300 flex-shrink-0">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs text-amber-200 block uppercase font-bold tracking-wider">Fiesta de Fin de Campus</span>
+                        <span class="text-sm font-semibold text-white">30 Dic a las 17:00h (5 PM)</span>
+                    </div>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-500/30 flex items-center justify-center text-xl text-emerald-300 flex-shrink-0">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs text-emerald-200 block uppercase font-bold tracking-wider">Campus Gratuito</span>
+                        <span class="text-sm font-semibold text-white">5€ material + Donación vol.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal del Formulario -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 pb-20 relative z-20">
+
+        <!-- Formulario Oficial -->
+        <form id="campusRegistrationForm" class="space-y-8" novalidate>
+            <!-- Campo Honeypot oculto anti-bots -->
+            <div class="hidden" aria-hidden="true">
+                <label for="website_url_check">No rellenar este campo</label>
+                <input type="text" id="website_url_check" name="website_url_check" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- SECCIÓN 1: ORGANIZACIÓN POR EDADES Y PARTICIPANTES -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
+                    <span class="step-badge">1</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Participantes y Grupos de Edad</h2>
+                        <p class="text-sm text-slate-500">Puedes inscribir a uno o varios participantes en esta misma solicitud.</p>
+                    </div>
+                </div>
+
+                <!-- Banner Informativo de Etapas -->
+                <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-900 leading-relaxed">
+                    <div class="font-bold flex items-center gap-2 text-amber-800 mb-1">
+                        <i class="fas fa-info-circle text-amber-600"></i> Etapas y política de acompañamiento:
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1 text-slate-700 mt-2">
+                        <li><strong>Etapa Infantil (3-5 años):</strong> Deben asistir <u>siempre acompañados por un adulto responsable</u>, que permanecerá las 5 horas del campus con ellos.</li>
+                        <li><strong>1º a 5º de Primaria (~6-10 años):</strong> Pueden asistir de forma autónoma (se quedan solos).</li>
+                        <li><strong>6º de Primaria a 3º de la ESO (~11-14 años):</strong> Asistencia autónoma con dinámicas adaptadas.</li>
+                        <li><strong>A partir de 4º de la ESO (15+ años):</strong> Grupo de voluntariado, dinamización y formación.</li>
+                    </ul>
+                </div>
+
+                <!-- Contenedor de Participantes -->
+                <div id="participantsList" class="space-y-5">
+                    <!-- Se inyectan dinámicamente con JavaScript -->
+                </div>
+
+                <!-- Botón Añadir Participante -->
+                <div class="mt-5">
+                    <button type="button" id="btnAddParticipant" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold text-sm border border-blue-200 transition-colors">
+                        <i class="fas fa-user-plus"></i> Añadir otro participante
+                    </button>
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 2: DATOS DEL PADRE, MADRE O TUTOR LEGAL -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
+                    <span class="step-badge">2</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Datos del Tutor / Responsable Legal</h2>
+                        <p class="text-sm text-slate-500">Persona de contacto para avisos, emergencias y autorizaciones.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- Nombre del tutor -->
+                    <div class="sm:col-span-2">
+                        <label for="tutor_nombre" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                            Nombre y Apellidos del Tutor/a o Representante *
+                        </label>
+                        <div class="relative field-box rounded-xl border border-slate-200 bg-white">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fas fa-user-shield"></i>
+                            </span>
+                            <input type="text" id="tutor_nombre" name="tutor_nombre" required autocomplete="name" autocapitalize="words"
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border-none focus:outline-none text-slate-800 text-sm"
+                                placeholder="Ej. María Josefa González Pérez">
+                        </div>
+                        <p class="text-xs text-red-500 mt-1 hidden" id="err-tutor_nombre">Introduce el nombre completo del tutor/a o representante legal.</p>
+                    </div>
+
+                    <!-- DNI / NIE -->
+                    <div>
+                        <label for="tutor_dni" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                            Documento de Identidad (DNI / NIE / Pasaporte) *
+                        </label>
+                        <div class="relative field-box rounded-xl border border-slate-200 bg-white">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                            <input type="text" id="tutor_dni" name="tutor_dni" required autocomplete="off" autocapitalize="characters"
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border-none focus:outline-none text-slate-800 text-sm uppercase"
+                                placeholder="12345678X o Y1234567Z">
+                        </div>
+                        <p class="text-xs text-red-500 mt-1 hidden" id="err-tutor_dni">Introduce un documento de identidad válido.</p>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div>
+                        <label for="tutor_telefono" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                            Teléfono de Contacto (Móvil) *
+                        </label>
+                        <div class="relative field-box rounded-xl border border-slate-200 bg-white">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                            <input type="tel" id="tutor_telefono" name="tutor_telefono" required autocomplete="tel" inputmode="tel"
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border-none focus:outline-none text-slate-800 text-sm"
+                                placeholder="612 34 56 78">
+                        </div>
+                        <p class="text-xs text-red-500 mt-1 hidden" id="err-tutor_telefono">Introduce un teléfono de contacto válido.</p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="sm:col-span-2">
+                        <label for="tutor_email" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                            Correo Electrónico (Para recibir la confirmación) *
+                        </label>
+                        <div class="relative field-box rounded-xl border border-slate-200 bg-white">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" id="tutor_email" name="tutor_email" required autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false"
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border-none focus:outline-none text-slate-800 text-sm"
+                                placeholder="tucorreo@ejemplo.com">
+                        </div>
+                        <p class="text-xs text-red-500 mt-1 hidden" id="err-tutor_email">Introduce un correo electrónico válido.</p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 3: VOLUNTARIADO (PADRES Y JÓVENES) -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
+                    <span class="step-badge">3</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Espacio de Voluntariado</h2>
+                        <p class="text-sm text-slate-500">¿Quieres ser voluntario/a o colaborar como padre o joven durante el campus?</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50/70 border border-blue-100 rounded-xl p-4 mb-5 text-sm text-blue-900 leading-relaxed">
+                    <p>Las actividades del campus son posibles gracias al espíritu de servicio de familias y jóvenes voluntarios. Si dispones de tiempo y deseas colaborar (en dinamización, apoyo en meriendas, talleres o acompañamiento), indícanos tus días disponibles.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Checkbox de interés en voluntariado -->
+                    <div class="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                        <input type="checkbox" id="voluntario_check" name="voluntario_check" class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
+                        <label for="voluntario_check" class="text-sm font-semibold text-slate-800 cursor-pointer">
+                            ¡Sí, deseo colaborar como voluntario/a (padre, madre o joven colaborador)!
+                        </label>
+                    </div>
+
+                    <!-- Campos condicionales de voluntariado -->
+                    <div id="seccion_voluntariado_dias" class="hidden space-y-4 pt-2 pl-2">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                ¿Qué día(s) tienes disponibilidad para colaborar?
+                            </label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-sm">
+                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                                    <input type="checkbox" name="voluntario_dias[]" value="23 Dic" class="rounded text-blue-600">
+                                    <span>23 Diciembre</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                                    <input type="checkbox" name="voluntario_dias[]" value="24 Dic" class="rounded text-blue-600">
+                                    <span>24 Diciembre</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                                    <input type="checkbox" name="voluntario_dias[]" value="28 Dic" class="rounded text-blue-600">
+                                    <span>28 Diciembre</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                                    <input type="checkbox" name="voluntario_dias[]" value="29 Dic" class="rounded text-blue-600">
+                                    <span>29 Diciembre</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                                    <input type="checkbox" name="voluntario_dias[]" value="30 Dic (Fiesta 17h)" class="rounded text-blue-600">
+                                    <span>30 Dic (Fin campus)</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-blue-200 bg-blue-50/50 hover:bg-blue-50 cursor-pointer font-medium text-blue-800">
+                                    <input type="checkbox" id="voluntario_todos_dias" value="Todos los días" class="rounded text-blue-600">
+                                    <span>Todos los días</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="voluntario_datos" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                Nombre de la persona voluntaria y observaciones (edad, preferencias o disponibilidad):
+                            </label>
+                            <textarea id="voluntario_datos" name="voluntario_datos" rows="2"
+                                class="w-full p-3 rounded-xl border border-slate-200 text-sm focus:outline-none field-box"
+                                placeholder="Ej. Carlos (joven 16 años, apoyo en dinámicas) o Nuria (madre, apoyo 23 y 24 dic)..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 4: LOGÍSTICA, TALLERES Y SALUD -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
+                    <span class="step-badge">4</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Salud, Talleres y Ropa</h2>
+                        <p class="text-sm text-slate-500">Detalles logísticos importantes para la seguridad y dinamización de las sesiones.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Salud y Alergias -->
+                    <div>
+                        <label for="medicas" class="block text-sm font-semibold text-slate-700 mb-1.5 flex items-center gap-2">
+                            <i class="fas fa-notes-medical text-red-500"></i> Cuestiones Médicas, Intolerancias o Alergias Alimentarias
+                        </label>
+                        <textarea id="medicas" name="medicas" rows="2"
+                            class="w-full p-3.5 rounded-xl border border-slate-200 text-sm field-box focus:outline-none"
+                            placeholder="Indica si algún participante tiene alergias, intolerancias alimentarias o medicación relevante (o escribe 'Ninguna')."></textarea>
+                    </div>
+
+                    <!-- Taller Propuesto -->
+                    <div>
+                        <label for="taller" class="block text-sm font-semibold text-slate-700 mb-1.5 flex items-center gap-2">
+                            <i class="fas fa-lightbulb text-amber-500"></i> ¿Deseas ofrecer un taller o talento durante el campus? (Opcional)
+                        </label>
+                        <p class="text-xs text-slate-500 mb-2">Si tienes alguna habilidad (arte, música, ciencia, manualidades, juegos) y te gustaría impartir un mini-taller:</p>
+                        <textarea id="taller" name="taller" rows="2"
+                            class="w-full p-3.5 rounded-xl border border-slate-200 text-sm field-box focus:outline-none"
+                            placeholder="Nombre del taller, tiempo estimado, materiales necesarios o día preferido..."></textarea>
+                    </div>
+
+                    <!-- Camiseta Oficial / Recuerdo -->
+                    <div class="border-t border-slate-100 pt-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                            <div>
+                                <label class="text-sm font-semibold text-slate-800 block">Camiseta Oficial de Recuerdo del Campus (Opcional)</label>
+                                <p class="text-xs text-slate-500">Si deseas encargar la camiseta conmemorativa, puedes solicitarla aquí.</p>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <label class="inline-flex items-center text-sm gap-1.5 cursor-pointer">
+                                    <input type="radio" name="camiseta" id="camiseta_no" value="No" checked class="text-blue-600">
+                                    <span>No, gracias</span>
+                                </label>
+                                <label class="inline-flex items-center text-sm gap-1.5 cursor-pointer">
+                                    <input type="radio" name="camiseta" id="camiseta_si" value="Sí" class="text-blue-600">
+                                    <span>Sí, encargar</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Selector de talla si elige camiseta -->
+                        <div id="seccion_tallas" class="hidden mt-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <label for="talla" class="block text-xs font-semibold text-slate-700 mb-1.5">Selecciona la talla requerida:</label>
+                            <select id="talla" name="talla" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm bg-white">
+                                <option value="" selected disabled>Selecciona una talla...</option>
+                                <option value="Infantil 5-6 años">Infantil (5-6 años)</option>
+                                <option value="Infantil 7-8 años">Infantil (7-8 años)</option>
+                                <option value="Infantil 9-11 años">Infantil (9-11 años)</option>
+                                <option value="Infantil 12-14 años">Infantil (12-14 años)</option>
+                                <option value="Adulto XS">Adulto XS</option>
+                                <option value="Adulto S">Adulto S</option>
+                                <option value="Adulto M">Adulto M</option>
+                                <option value="Adulto L">Adulto L</option>
+                                <option value="Adulto XL">Adulto XL</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 5: COSTES Y DONACIÓN VOLUNTARIA -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
+                    <span class="step-badge">5</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Coste de Materiales y Donaciones</h2>
+                        <p class="text-sm text-slate-500">Transparencia para una actividad accesible a todas las familias.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-3 text-sm text-slate-700">
+                        <div class="flex items-center gap-2 font-medium text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                            <i class="fas fa-check-circle text-emerald-600 text-lg"></i>
+                            <span><strong>El campus es 100% gratuito</strong> gracias a la asociación y a los voluntarios.</span>
+                        </div>
+                        <p class="leading-relaxed">
+                            Solo se solicita una aportación de <strong>5€ por participante</strong> para costear el material didáctico, manualidades y recursos de las actividades.
+                        </p>
+                        <p class="leading-relaxed">
+                            Asimismo, al ser una asociación sin ánimo de lucro, <strong>se aceptan donaciones voluntarias</strong> de quien desee y pueda colaborar con el sostenimiento de futuros proyectos comunitarios.
+                        </p>
+                    </div>
+
+                    <!-- Calculadora Dinámica de Aportación -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs uppercase font-bold text-slate-500 tracking-wider mb-2">Desglose Estimado</div>
+                            <div class="space-y-2 text-sm text-slate-700">
+                                <div class="flex justify-between">
+                                    <span>Material (<span id="calcNumParticipantes">1</span> part. × 5€):</span>
+                                    <strong id="calcSubtotalMaterial">5€</strong>
+                                </div>
+
+                                <!-- Donación Voluntaria Select -->
+                                <div class="pt-2 border-t border-slate-200">
+                                    <label for="donacion_select" class="block text-xs font-semibold text-slate-600 mb-1">
+                                        Donación voluntaria para el proyecto:
+                                    </label>
+                                    <select id="donacion_select" name="donacion_select" class="w-full p-2 rounded-lg border border-slate-300 text-sm bg-white">
+                                        <option value="0">0€ (Solo material)</option>
+                                        <option value="5">5€ (Aportación solidaria)</option>
+                                        <option value="10" selected>10€ (Apoyo voluntario recomendado)</option>
+                                        <option value="20">20€ (Gran apoyo a la asociación)</option>
+                                        <option value="otro">Otro importe...</option>
+                                    </select>
+                                    <input type="number" id="donacion_custom" min="0" placeholder="Introduce importe en €" class="hidden mt-2 w-full p-2 rounded-lg border border-slate-300 text-sm bg-white">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total en Grande -->
+                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
+                            <span class="text-base font-bold text-slate-900">Total Aporte Estimado:</span>
+                            <span id="calcTotalEstimado" class="text-2xl font-extrabold text-blue-700">15€</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formas de Pago / Aportación -->
+                <div class="mt-6 pt-5 border-t border-slate-100">
+                    <label class="block text-sm font-semibold text-slate-800 mb-2">Método de pago / aportación previsto:</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                        <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="metodo_pago" value="Bizum" checked class="mt-1 text-blue-600">
+                            <div>
+                                <strong class="block text-slate-800">Bizum previo al campus</strong>
+                                <span class="text-xs text-slate-500">A Eliana B.R. al <strong>634541119</strong></span>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="metodo_pago" value="Efectivo" class="mt-1 text-blue-600">
+                            <div>
+                                <strong class="block text-slate-800">En efectivo el primer día</strong>
+                                <span class="text-xs text-slate-500">Acudiendo 15 minutos antes del inicio.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 6: COMPROMISOS Y AUTORIZACIONES LEGALES -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
+                    <span class="step-badge">6</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Compromisos y Autorizaciones</h2>
+                        <p class="text-sm text-slate-500">Normativa de convivencia, autorizaciones sanitarias y uso de imágenes.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Acordeón de Compromisos -->
+                    <details class="bg-blue-50/50 border border-blue-100 rounded-xl p-4 cursor-pointer text-sm">
+                        <summary class="font-bold text-blue-900 flex items-center justify-between">
+                            <span><i class="fas fa-handshake mr-2 text-blue-600"></i> Ver Código de Convivencia y Respeto Mutuo</span>
+                            <span class="text-xs text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">Desplegar</span>
+                        </summary>
+                        <div class="pt-3 text-slate-700 space-y-2 text-xs sm:text-sm leading-relaxed border-t border-blue-100 mt-3">
+                            <p>• <strong>Respeto y cortesía:</strong> Tratar a todos con amabilidad, espíritu de amistad y escucha activa.</p>
+                            <p>• <strong>Unidad e inclusión:</strong> Promover un ambiente libre de exclusiones, chismes o conductas inadecuadas.</p>
+                            <p>• <strong>Cuidado de las instalaciones:</strong> Mantener limpios y ordenados los espacios comunes y salas compartidas.</p>
+                            <p>• <strong>Uso responsable del móvil:</strong> Para favorecer la convivencia, los móviles solo se usarán en los descansos o emergencias.</p>
+                            <p>• <strong>Espíritu de aprendizaje:</strong> Participar con humildad, generosidad y vocación de servicio a la comunidad.</p>
+                        </div>
+                    </details>
+
+                    <!-- Check 1: Compromiso de Convivencia -->
+                    <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white">
+                        <input type="checkbox" id="compromiso" name="compromiso" required class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
+                        <label for="compromiso" class="text-sm font-semibold text-slate-800 cursor-pointer">
+                            He leído y me comprometo a cumplir (y que los participantes cumplan) los compromisos de convivencia. *
+                        </label>
+                    </div>
+
+                    <!-- Check 2: Ropa adecuada para talleres -->
+                    <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white">
+                        <input type="checkbox" id="check_camiseta" name="check_camiseta" required class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
+                        <label for="check_camiseta" class="text-sm font-semibold text-slate-800 cursor-pointer">
+                            Compromiso de vestimenta: Los participantes asistirán con ropa cómoda apta para manualidades y actividades prácticas. *
+                        </label>
+                    </div>
+
+                    <!-- Check 3: Acompañamiento infantil condicional (si hay niños de 3-5 años) -->
+                    <div id="check_infantil_box" class="hidden p-3.5 rounded-xl border border-amber-200 bg-amber-50">
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="check_infantil" name="check_infantil" class="w-5 h-5 mt-0.5 rounded text-amber-600 focus:ring-amber-500 border-amber-300">
+                            <label for="check_infantil" class="text-sm font-semibold text-amber-900 cursor-pointer">
+                                Compromiso obligatorio Etapa Infantil: Entiendo y acepto que el menor de etapa infantil asistirá permanentemente acompañado de un adulto las 5 horas del campus. *
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Check 4: Autorización de Imágenes -->
+                    <div class="p-4 rounded-xl border border-slate-200 bg-white">
+                        <label class="block text-sm font-semibold text-slate-800 mb-1.5">
+                            Autorización para toma y uso de imágenes / vídeos sin fines de lucro *
+                        </label>
+                        <p class="text-xs text-slate-500 mb-2.5">
+                            Exclusivamente para memorias comunitarias, material educativo y difusión de actividades de la asociación.
+                        </p>
+                        <div class="flex items-center gap-5 text-sm">
+                            <label class="inline-flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                                <input type="radio" name="autoriza_imagen" value="Sí" required class="text-blue-600">
+                                <span>Sí, autorizo</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                                <input type="radio" name="autoriza_imagen" value="No" class="text-blue-600">
+                                <span>No autorizo</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Check 5: Autorización médica y de participación -->
+                    <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white">
+                        <input type="checkbox" id="check_medico" name="check_medico" required class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
+                        <label for="check_medico" class="text-sm font-semibold text-slate-800 cursor-pointer">
+                            Autorización médica y de participación: Autorizo la asistencia del menor al campus y faculto a los coordinadores a tomar las medidas sanitarias o médicas de urgencia oportunas en caso necesario. *
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 7: VERIFICACIÓN DE SEGURIDAD ANTI-BOT (CAPTCHA) -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
+                    <span class="step-badge">7</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Verificación de Seguridad Anti-Bot</h2>
+                        <p class="text-sm text-slate-500">Introduce el código visual para comprobar que eres una persona y evitar envíos automatizados.</p>
+                    </div>
+                </div>
+
+                <div class="max-w-md space-y-4">
+                    <label class="block text-sm font-semibold text-slate-700">
+                        Código de seguridad anti-bot *
+                    </label>
+                    <div class="flex items-center gap-3">
+                        <!-- Caja de Captcha estilizada con letras grandes y contraste -->
+                        <div id="captchaBox" class="select-none flex-shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-900 to-indigo-950 text-yellow-300 font-mono font-extrabold text-2xl tracking-widest shadow-inner border border-blue-700 flex items-center justify-center min-w-[140px]">
+                            ----
+                        </div>
+                        <button type="button" id="btnRegenerarCaptcha" class="px-4 py-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition font-semibold text-sm flex items-center gap-2" title="Generar un nuevo código">
+                            <i class="fas fa-sync-alt" id="iconRegenerar"></i>
+                            <span class="hidden sm:inline">Nuevo código</span>
+                        </button>
+                    </div>
+
+                    <div class="relative field-box rounded-xl border border-slate-200 bg-white">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fas fa-shield-alt"></i>
+                        </span>
+                        <input type="text" id="captchaInput" name="captchaInput" required maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false"
+                            class="w-full pl-10 pr-4 py-3 rounded-xl border-none focus:outline-none text-slate-800 text-sm uppercase tracking-widest font-mono font-bold"
+                            placeholder="Escribe el código aquí">
+                    </div>
+                    <p class="text-xs text-red-500 mt-1 hidden" id="err-captcha">El código de seguridad no coincide. Por favor, compruébalo e inténtalo de nuevo.</p>
+                </div>
+            </section>
+
+
+            <!-- BOTÓN DE ENVÍO Y LIMPIEZA -->
+            <div class="text-center pt-2 space-y-3">
+                <button type="submit" id="btnSubmit" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 rounded-2xl bg-gradient-to-r from-blue-700 to-blue-800 text-white font-bold text-lg shadow-lg hover:from-blue-800 hover:to-blue-900 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Completar Inscripción</span>
+                </button>
+
+                <div>
+                    <button type="button" id="btnLimpiarManual" class="text-xs text-slate-400 hover:text-slate-600 underline transition inline-flex items-center gap-1.5 py-1">
+                        <i class="fas fa-redo-alt"></i> Limpiar datos del formulario y empezar de nuevo
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-500">Tus datos se transmiten de forma cifrada y segura a los coordinadores del campus.</p>
+            </div>
+        </form>
+
+        <!-- Pie de Página Informativo -->
+        <footer class="mt-16 text-center text-slate-500 text-xs sm:text-sm space-y-2 border-t border-slate-200 pt-8">
+            <p class="font-bold text-slate-700">Campus de Navidad 2026 · Construyendo Comunidad</p>
+            <p>Organizado por la Asociación sin ánimo de lucro · Almería</p>
+            <p>Contacto de coordinación: <a href="mailto:ael.garrucha@bahai.es" class="text-blue-600 hover:underline">ael.garrucha@bahai.es</a></p>
+        </footer>
+    </main>
+
+
+    <!-- MODAL DE CONFIRMACIÓN DE ÉXITO -->
+    <div id="modalExito" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-center animate-fade-in">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl mb-4">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-1">¡Inscripción Registrada!</h3>
+            <p class="text-sm text-slate-600 mb-5">Hemos recibido tu solicitud y te hemos enviado un correo de confirmación con los detalles.</p>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 text-left">
+                <div class="text-xs text-blue-700 font-bold uppercase tracking-wider mb-1">Tu Localizador Único:</div>
+                <div id="modalLocalizador" class="text-2xl font-extrabold text-blue-900 font-mono tracking-wider">NAV-26-0000</div>
+                <p class="text-xs text-blue-600 mt-2">Conserva este código como referencia para cualquier consulta o para el concepto de tu aportación por Bizum.</p>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-6 text-left text-xs sm:text-sm space-y-1.5 text-slate-700">
+                <div class="font-bold text-slate-800 mb-1"><i class="fas fa-wallet mr-1 text-slate-500"></i> Si escogiste Bizum:</div>
+                <p>Envía tu aportación al número: <strong class="text-blue-700">634541119</strong> (Eliana B.R.)</p>
+                <div class="flex items-center gap-2 mt-2">
+                    <button type="button" id="btnCopiarBizum" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:bg-slate-100 text-slate-700 flex items-center gap-1.5">
+                        <i class="fas fa-copy"></i> Copiar Teléfono
+                    </button>
+                    <span id="bizumCopiadoTxt" class="text-xs text-emerald-600 font-bold hidden">¡Copiado!</span>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <button type="button" id="btnCerrarModal" class="w-full py-3.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl text-sm transition">
+                    Entendido y Cerrar
+                </button>
+                <button type="button" id="btnNuevaInscripcion" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition">
+                    Realizar otra inscripción
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast" class="toast-notification bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
+        <div id="toastIcon" class="text-lg text-blue-400"><i class="fas fa-info-circle"></i></div>
+        <div id="toastMsg" class="text-sm font-medium">Mensaje de notificación</div>
+    </div>
+
+
+    <!-- JAVASCRIPT DEL FORMULARIO -->
+    <script>
+        // Endpoint oficial de Google Apps Script
+        //const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLCFf0RDH4vHbA5q4JxjJ8j1Mw89l15JA1dUvOOnwt79HmE9qIgXtKFZ1Uyxe7xMJo/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyUTnv8Oqm2lmzfQQoiAFItM_-jfnDxoPwhDdn_nHX0HCJ29QmG1Lgne0YvPl9KAiD/exec';
+
+        // Estado y referencias
+        const participantsList = document.getElementById('participantsList');
+        const btnAddParticipant = document.getElementById('btnAddParticipant');
+        const form = document.getElementById('campusRegistrationForm');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const voluntarioCheck = document.getElementById('voluntario_check');
+        const seccionVoluntariado = document.getElementById('seccion_voluntariado_dias');
+        const voluntarioTodosDias = document.getElementById('voluntario_todos_dias');
+        const donacionSelect = document.getElementById('donacion_select');
+        const donacionCustom = document.getElementById('donacion_custom');
+        const calcNumParticipantes = document.getElementById('calcNumParticipantes');
+        const calcSubtotalMaterial = document.getElementById('calcSubtotalMaterial');
+        const calcTotalEstimado = document.getElementById('calcTotalEstimado');
+        const checkInfantilBox = document.getElementById('check_infantil_box');
+        const checkInfantil = document.getElementById('check_infantil');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+        const toastIcon = document.getElementById('toastIcon');
+        const modalExito = document.getElementById('modalExito');
+        const modalLocalizador = document.getElementById('modalLocalizador');
+        const btnCerrarModal = document.getElementById('btnCerrarModal');
+        const btnNuevaInscripcion = document.getElementById('btnNuevaInscripcion');
+        const btnLimpiarManual = document.getElementById('btnLimpiarManual');
+        const btnCopiarBizum = document.getElementById('btnCopiarBizum');
+        const bizumCopiadoTxt = document.getElementById('bizumCopiadoTxt');
+
+        // Referencias Captcha Anti-Bot
+        const captchaBox = document.getElementById('captchaBox');
+        const btnRegenerarCaptcha = document.getElementById('btnRegenerarCaptcha');
+        const captchaInput = document.getElementById('captchaInput');
+        const errCaptcha = document.getElementById('err-captcha');
+        let codigoCaptchaActual = '';
+
+        // Camisetas
+        const camisetaSi = document.getElementById('camiseta_si');
+        const camisetaNo = document.getElementById('camiseta_no');
+        const seccionTallas = document.getElementById('seccion_tallas');
+        const selectTalla = document.getElementById('talla');
+
+        let participantCount = 0;
+
+        // Función para mostrar notificación Toast
+        function showToast(message, type = 'info') {
+            toastMsg.textContent = message;
+            if (type === 'error') {
+                toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle text-red-400"></i>';
+            } else if (type === 'success') {
+                toastIcon.innerHTML = '<i class="fas fa-check-circle text-emerald-400"></i>';
+            } else {
+                toastIcon.innerHTML = '<i class="fas fa-info-circle text-blue-400"></i>';
+            }
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 4500);
+        }
+
+        // Función para calcular edad aproximada
+        function calcularEdad(fechaNacimiento) {
+            if (!fechaNacimiento) return null;
+            const hoy = new Date();
+            const nacimiento = new Date(fechaNacimiento);
+            let edad = hoy.getFullYear() - nacimiento.getFullYear();
+            const m = hoy.getMonth() - nacimiento.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+                edad--;
+            }
+            return edad;
+        }
+
+        // Determinar grupo según edad
+        function sugerirGrupoPorEdad(edad) {
+            if (edad === null || isNaN(edad)) return '';
+            if (edad >= 3 && edad <= 5) return 'Etapa Infantil (3-5 años)';
+            if (edad >= 6 && edad <= 10) return '1º a 5º de Primaria (~6-10 años)';
+            if (edad >= 11 && edad <= 14) return '6º Primaria a 3º ESO (~11-14 años)';
+            if (edad >= 15) return 'A partir de 4º ESO (15+ años) - Voluntariado';
+            return 'Etapa Infantil (3-5 años)';
+        }
+
+        // Verificar si hay algún participante en etapa infantil para exigir el compromiso de acompañamiento
+        function verificarEtapaInfantilGlobal() {
+            let hayInfantil = false;
+            document.querySelectorAll('.participant-group-select').forEach(sel => {
+                if (sel.value.includes('Infantil')) {
+                    hayInfantil = true;
+                }
+            });
+
+            if (hayInfantil) {
+                checkInfantilBox.classList.remove('hidden');
+                checkInfantil.setAttribute('required', 'required');
+            } else {
+                checkInfantilBox.classList.add('hidden');
+                checkInfantil.removeAttribute('required');
+                checkInfantil.checked = false;
+            }
+        }
+
+        // Actualizar la calculadora de importes
+        function actualizarCalculos() {
+            const num = document.querySelectorAll('.participant-card').length || 1;
+            calcNumParticipantes.textContent = num;
+            const subtotalMaterial = num * 5;
+            calcSubtotalMaterial.textContent = `${subtotalMaterial}€`;
+
+            let donacion = 0;
+            if (donacionSelect.value === 'otro') {
+                donacion = parseFloat(donacionCustom.value) || 0;
+            } else {
+                donacion = parseFloat(donacionSelect.value) || 0;
+            }
+
+            const total = subtotalMaterial + donacion;
+            calcTotalEstimado.textContent = `${total}€`;
+        }
+
+        // Crear tarjeta de participante
+        function createParticipantCard() {
+            participantCount++;
+            const currentIdx = participantCount;
+
+            const card = document.createElement('div');
+            card.className = 'participant-card bg-slate-50/80 border border-slate-200 rounded-2xl p-4 sm:p-5 relative transition-all';
+            card.dataset.id = currentIdx;
+
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <span class="inline-flex items-center gap-2 text-sm font-bold text-slate-800">
+                        <i class="fas fa-user text-blue-600"></i> Participante <span class="participant-number"></span>
+                    </span>
+                    <button type="button" class="btn-remove-part text-slate-400 hover:text-red-500 text-sm font-semibold p-1 transition" title="Eliminar participante">
+                        <i class="fas fa-trash-alt mr-1"></i> Eliminar
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Nombre -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre completo del menor/joven *</label>
+                        <input type="text" name="participante_nombre[]" required placeholder="Ej. Lucía Martínez"
+                            class="participant-name w-full p-2.5 rounded-xl border border-slate-200 bg-white text-sm field-box focus:outline-none">
+                    </div>
+
+                    <!-- Fecha de nacimiento -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Fecha de nacimiento *</label>
+                        <input type="date" name="participante_nacimiento[]" required
+                            class="participant-birthdate w-full p-2.5 rounded-xl border border-slate-200 bg-white text-sm field-box focus:outline-none">
+                    </div>
+
+                    <!-- Grupo asignado -->
+                    <div class="sm:col-span-2">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-700">Grupo asignado *</label>
+                            <span class="participant-age-badge text-xs text-blue-700 font-semibold"></span>
+                        </div>
+                        <select name="participante_grupo[]" required class="participant-group-select w-full p-2.5 rounded-xl border border-slate-200 bg-white text-sm field-box focus:outline-none">
+                            <option value="" disabled selected>Selecciona o calcula por fecha de nacimiento...</option>
+                            <option value="Etapa Infantil (3-5 años)">Etapa Infantil (3-5 años) — Acompañado obligatoriamente de un adulto</option>
+                            <option value="1º a 5º de Primaria (~6-10 años)">1º a 5º de Primaria (~6-10 años) — Autónomo</option>
+                            <option value="6º Primaria a 3º ESO (~11-14 años)">6º Primaria a 3º de la ESO (~11-14 años) — Autónomo</option>
+                            <option value="A partir de 4º ESO (15+ años) - Voluntariado">A partir de 4º ESO (15+ años) — Voluntariado y Formación</option>
+                        </select>
+                    </div>
+
+                    <!-- Alerta condicional para etapa infantil -->
+                    <div class="infantil-acompanante-box hidden sm:col-span-2 p-3 bg-amber-100/70 border border-amber-300 rounded-xl text-xs text-amber-900">
+                        <div class="font-bold mb-1 flex items-center gap-1.5">
+                            <i class="fas fa-exclamation-triangle text-amber-600"></i> Adulto acompañante requerido para Etapa Infantil (5 horas completas):
+                        </div>
+                        <input type="text" name="participante_adulto_acompanante[]" placeholder="Nombre completo y parentesco del adulto que le acompañará durante las 5 horas"
+                            class="participant-adulto-input w-full p-2 mt-1 rounded-lg border border-amber-300 bg-white text-xs">
+                    </div>
+                </div>
+            `;
+
+            // Lógica interna de la tarjeta
+            const birthInput = card.querySelector('.participant-birthdate');
+            const groupSelect = card.querySelector('.participant-group-select');
+            const ageBadge = card.querySelector('.participant-age-badge');
+            const infantilBox = card.querySelector('.infantil-acompanante-box');
+            const adultoInput = card.querySelector('.participant-adulto-input');
+            const btnRemove = card.querySelector('.btn-remove-part');
+
+            // Actualizar grupo cuando cambia la fecha
+            birthInput.addEventListener('change', () => {
+                const edad = calcularEdad(birthInput.value);
+                if (edad !== null && edad >= 0) {
+                    ageBadge.textContent = `${edad} años aprox.`;
+                    const sugerido = sugerirGrupoPorEdad(edad);
+                    if (sugerido) {
+                        groupSelect.value = sugerido;
+                        groupSelect.dispatchEvent(new Event('change'));
+                    }
+                } else {
+                    ageBadge.textContent = '';
+                }
+            });
+
+            // Reaccionar al cambio de grupo
+            groupSelect.addEventListener('change', () => {
+                if (groupSelect.value.includes('Infantil')) {
+                    infantilBox.classList.remove('hidden');
+                    adultoInput.setAttribute('required', 'required');
+                } else {
+                    infantilBox.classList.add('hidden');
+                    adultoInput.removeAttribute('required');
+                    adultoInput.value = '';
+                }
+                verificarEtapaInfantilGlobal();
+            });
+
+            // Botón eliminar participante
+            btnRemove.addEventListener('click', () => {
+                const totalCards = document.querySelectorAll('.participant-card').length;
+                if (totalCards <= 1) {
+                    showToast('Debe haber al menos un participante en la inscripción.', 'error');
+                    return;
+                }
+                card.remove();
+                renumerarParticipantes();
+                actualizarCalculos();
+                verificarEtapaInfantilGlobal();
+            });
+
+            participantsList.appendChild(card);
+            renumerarParticipantes();
+            actualizarCalculos();
+            verificarEtapaInfantilGlobal();
+        }
+
+        // Renumerar los encabezados visuales (Participante 1, 2, ...)
+        function renumerarParticipantes() {
+            document.querySelectorAll('.participant-card').forEach((card, idx) => {
+                const numSpan = card.querySelector('.participant-number');
+                if (numSpan) numSpan.textContent = idx + 1;
+            });
+        }
+
+        // Eventos de voluntariado
+        voluntarioCheck.addEventListener('change', () => {
+            if (voluntarioCheck.checked) {
+                seccionVoluntariado.classList.remove('hidden');
+            } else {
+                seccionVoluntariado.classList.add('hidden');
+            }
+        });
+
+        voluntarioTodosDias.addEventListener('change', () => {
+            const diasChecks = document.querySelectorAll('input[name="voluntario_dias[]"]');
+            diasChecks.forEach(ch => {
+                ch.checked = voluntarioTodosDias.checked;
+            });
+        });
+
+        // Eventos de donación
+        donacionSelect.addEventListener('change', () => {
+            if (donacionSelect.value === 'otro') {
+                donacionCustom.classList.remove('hidden');
+                donacionCustom.focus();
+            } else {
+                donacionCustom.classList.add('hidden');
+            }
+            actualizarCalculos();
+        });
+        donacionCustom.addEventListener('input', actualizarCalculos);
+
+        // Eventos de camisetas
+        camisetaSi.addEventListener('change', () => {
+            if (camisetaSi.checked) {
+                seccionTallas.classList.remove('hidden');
+                selectTalla.setAttribute('required', 'required');
+            }
+        });
+        camisetaNo.addEventListener('change', () => {
+            if (camisetaNo.checked) {
+                seccionTallas.classList.add('hidden');
+                selectTalla.removeAttribute('required');
+                selectTalla.value = '';
+            }
+        });
+
+        // Copiar Bizum al portapapeles
+        btnCopiarBizum.addEventListener('click', () => {
+            navigator.clipboard.writeText('634541119').then(() => {
+                bizumCopiadoTxt.classList.remove('hidden');
+                setTimeout(() => bizumCopiadoTxt.classList.add('hidden'), 3000);
+            });
+        });
+
+        // Función para generar código de verificación anti-bot
+        function generarCaptcha() {
+            const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Caracteres claros sin 0/O ni 1/I
+            let resultado = '';
+            for (let i = 0; i < 4; i++) {
+                resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            codigoCaptchaActual = resultado;
+            if (captchaBox) {
+                captchaBox.textContent = resultado;
+            }
+            if (captchaInput) {
+                captchaInput.value = '';
+                captchaInput.classList.remove('border-red-500');
+            }
+            if (errCaptcha) {
+                errCaptcha.classList.add('hidden');
+            }
+        }
+
+        // Función de LIMPIEZA COMPLETA del formulario
+        // Desbloquea el botón final SÓLO cuando todo el formulario ha quedado reseteado y listo para un nuevo registro
+        function resetFormularioCompleto() {
+            // 1. Resetear campos nativos
+            form.reset();
+
+            // 2. Limpiar participantes dinámicos y dejar exactamente 1 vacío
+            participantsList.innerHTML = '';
+            participantCount = 0;
+            createParticipantCard();
+
+            // 3. Resetear voluntariado
+            voluntarioCheck.checked = false;
+            seccionVoluntariado.classList.add('hidden');
+            document.querySelectorAll('input[name="voluntario_dias[]"]').forEach(ch => ch.checked = false);
+            if (voluntarioTodosDias) voluntarioTodosDias.checked = false;
+
+            // 4. Resetear camisetas y tallas
+            camisetaNo.checked = true;
+            seccionTallas.classList.add('hidden');
+            selectTalla.removeAttribute('required');
+            selectTalla.value = '';
+
+            // 5. Resetear etapa infantil
+            checkInfantilBox.classList.add('hidden');
+            checkInfantil.removeAttribute('required');
+            checkInfantil.checked = false;
+
+            // 6. Resetear donación y calculadora
+            donacionSelect.value = '10';
+            donacionCustom.classList.add('hidden');
+            donacionCustom.value = '';
+            actualizarCalculos();
+
+            // 7. Regenerar captcha anti-bot
+            generarCaptcha();
+
+            // 8. Ocultar todos los avisos de error y bordes rojos
+            document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+            document.querySelectorAll('[id^="err-"]').forEach(el => el.classList.add('hidden'));
+
+            // 9. Cerrar modal de confirmación si estaba abierto
+            modalExito.classList.add('hidden');
+
+            // 10. REGLA CLAVE: SÓLO EN ESTE MOMENTO (tras limpiar y reiniciar todo) se desbloquea el botón final
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+            btnSubmit.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Completar Inscripción';
+
+            // Desplazar suavemente hacia arriba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Eventos del Modal y Limpieza Manual
+        btnCerrarModal.addEventListener('click', () => {
+            resetFormularioCompleto();
+            showToast('Formulario restablecido para un nuevo registro.', 'info');
+        });
+
+        if (btnNuevaInscripcion) {
+            btnNuevaInscripcion.addEventListener('click', () => {
+                resetFormularioCompleto();
+                showToast('Formulario listo para una nueva inscripción.', 'info');
+            });
+        }
+
+        if (btnLimpiarManual) {
+            btnLimpiarManual.addEventListener('click', () => {
+                if (confirm('¿Deseas vaciar todos los campos del formulario y empezar de nuevo?')) {
+                    resetFormularioCompleto();
+                    showToast('Formulario vaciado correctamente.', 'info');
+                }
+            });
+        }
+
+        btnRegenerarCaptcha.addEventListener('click', () => {
+            generarCaptcha();
+            showToast('Nuevo código de seguridad generado.', 'info');
+        });
+
+        // Inicializar con 1 participante por defecto y código Captcha al cargar el DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticipantCard();
+            btnAddParticipant.addEventListener('click', createParticipantCard);
+            generarCaptcha();
+        });
+
+        // Envío del Formulario
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // 1. Comprobar Honeypot invisible
+            const honeypot = document.getElementById('website_url_check').value;
+            if (honeypot && honeypot.trim() !== '') {
+                console.warn('Envío automatizado bloqueado.');
+                return;
+            }
+
+            // 2. Limpiar errores visuales previos
+            document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+            document.querySelectorAll('[id^="err-"]').forEach(el => el.classList.add('hidden'));
+
+            let valid = true;
+
+            // Validar campos requeridos nativos
+            const requiredFields = form.querySelectorAll('[required]');
+            for (let field of requiredFields) {
+                if (field.type === 'checkbox' && !field.checked) {
+                    field.classList.add('border-red-500');
+                    valid = false;
+                } else if (field.type === 'radio') {
+                    const groupName = field.name;
+                    const radioChecked = form.querySelector(`input[name="${groupName}"]:checked`);
+                    if (!radioChecked) {
+                        valid = false;
+                        showToast(`Por favor, selecciona una opción en las autorizaciones obligatorias.`, 'error');
+                        break;
+                    }
+                } else if (!field.value || field.value.trim() === '') {
+                    field.classList.add('border-red-500');
+                    const errEl = document.getElementById(`err-${field.id}`);
+                    if (errEl) errEl.classList.remove('hidden');
+                    valid = false;
+                }
+            }
+
+            // 3. Validar Código de Seguridad Anti-Bot (Captcha)
+            const inputVal = captchaInput.value.trim().toUpperCase();
+            if (inputVal !== codigoCaptchaActual) {
+                captchaInput.classList.add('border-red-500');
+                errCaptcha.classList.remove('hidden');
+                valid = false;
+                showToast('El código de seguridad anti-bot no coincide.', 'error');
+                generarCaptcha();
+            } else {
+                captchaInput.classList.remove('border-red-500');
+                errCaptcha.classList.add('hidden');
+            }
+
+            if (!valid) {
+                showToast('Por favor, revisa los campos señalados en rojo antes de enviar.', 'error');
+                return;
+            }
+
+            // 4. BLOQUEO TOTAL DEL BOTÓN DE ENVÍO
+            btnSubmit.disabled = true;
+            btnSubmit.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Procesando inscripción...';
+
+            // 5. Preparar datos para enviar
+            const formData = new FormData();
+
+            // Participantes
+            document.querySelectorAll('.participant-card').forEach(card => {
+                const name = card.querySelector('.participant-name').value.trim();
+                const birth = card.querySelector('.participant-birthdate').value;
+                const group = card.querySelector('.participant-group-select').value;
+                const adulto = card.querySelector('.participant-adulto-input') ? card.querySelector('.participant-adulto-input').value.trim() : 'No aplica';
+
+                formData.append('participante_nombre[]', name);
+                formData.append('participante_nacimiento[]', birth);
+                formData.append('participante_grupo[]', group);
+                formData.append('participante_adulto_acompanante[]', adulto || 'No aplica');
+            });
+
+            // Tutor
+            formData.append('tutor_nombre', document.getElementById('tutor_nombre').value.trim());
+            formData.append('tutor_dni', document.getElementById('tutor_dni').value.trim().toUpperCase());
+            formData.append('tutor_telefono', document.getElementById('tutor_telefono').value.trim());
+            formData.append('tutor_email', document.getElementById('tutor_email').value.trim());
+
+            // Camisetas
+            const camisetaVal = document.querySelector('input[name="camiseta"]:checked').value;
+            formData.append('camiseta', camisetaVal);
+            formData.append('talla_camiseta', (camisetaVal === 'Sí' ? selectTalla.value : 'Ninguna'));
+
+            // Salud y talleres
+            formData.append('medicas_observaciones', document.getElementById('medicas').value.trim() || 'Ninguna');
+            formData.append('taller_propuesto', document.getElementById('taller').value.trim() || 'Ninguno');
+
+            // Voluntariado
+            const isVoluntario = voluntarioCheck.checked ? 'Sí' : 'No';
+            formData.append('voluntario_activo', isVoluntario);
+            formData.append('voluntario_datos', document.getElementById('voluntario_datos').value.trim() || 'No especificado');
+
+            let diasVoluntario = [];
+            document.querySelectorAll('input[name="voluntario_dias[]"]:checked').forEach(d => diasVoluntario.push(d.value));
+            formData.append('voluntario_dias', diasVoluntario.length ? diasVoluntario.join(', ') : (isVoluntario === 'Sí' ? 'Todos los días' : 'Ninguno'));
+
+            // Costes y donación
+            const numPart = document.querySelectorAll('.participant-card').length;
+            const subtotalMat = numPart * 5;
+            let donacionVal = 0;
+            if (donacionSelect.value === 'otro') {
+                donacionVal = parseFloat(donacionCustom.value) || 0;
+            } else {
+                donacionVal = parseFloat(donacionSelect.value) || 0;
+            }
+
+            formData.append('coste_material', `${subtotalMat}€`);
+            formData.append('donacion_voluntaria', `${donacionVal}€`);
+            formData.append('total_estimado', `${subtotalMat + donacionVal}€`);
+
+            const metodoPago = document.querySelector('input[name="metodo_pago"]:checked').value;
+            formData.append('metodo_pago', metodoPago);
+
+            // Autorizaciones
+            formData.append('compromiso_aceptado', document.getElementById('compromiso').checked ? 'Sí' : 'No');
+            formData.append('llevar_camiseta_blanca', document.getElementById('check_camiseta').checked ? 'Sí' : 'No');
+            formData.append('autoriza_imagen', document.querySelector('input[name="autoriza_imagen"]:checked').value);
+            formData.append('autorizacion_medica', document.getElementById('check_medico').checked ? 'Sí' : 'No');
+            formData.append('acompanamiento_infantil_aceptado', (checkInfantil.checked ? 'Sí' : 'No aplica'));
+            formData.append('captcha_verificado', 'Sí');
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    modalLocalizador.textContent = result.localizador || 'NAV-26-' + Math.floor(1000 + Math.random() * 9000);
+                    modalExito.classList.remove('hidden');
+
+                    // EL BOTÓN FINAL PERMANECE BLOQUEADO
+                    // Sólo se reactivará cuando el usuario pulse para cerrar o reiniciar el formulario
+                    btnSubmit.innerHTML = '<i class="fas fa-check mr-2"></i> Inscripción Enviada';
+                } else {
+                    showToast('Aviso del servidor: ' + (result.message || 'Error al procesar'), 'error');
+                    // En caso de error del servidor, se desbloquea para permitir corrección
+                    btnSubmit.disabled = false;
+                    btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+                    btnSubmit.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Completar Inscripción';
+                    generarCaptcha();
+                }
+            } catch (err) {
+                // Manejo de respuesta opaca en Google Apps Script
+                console.warn('Network / CORS note:', err);
+                const localizadorFallback = 'NAV-26-' + Math.floor(1000 + Math.random() * 9000);
+                modalLocalizador.textContent = localizadorFallback;
+                modalExito.classList.remove('hidden');
+
+                // El botón final permanece bloqueado hasta que se limpie el formulario
+                btnSubmit.innerHTML = '<i class="fas fa-check mr-2"></i> Inscripción Enviada';
+            }
+        });
+    </script>
+</body>
+
+</html>

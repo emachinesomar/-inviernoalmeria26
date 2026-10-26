@@ -1,0 +1,551 @@
+/**
+ * =========================================================================
+ * BACKEND GOOGLE APPS SCRIPT · CAMPUS DE NAVIDAD ALMERÍA 2026
+ * =========================================================================
+ * Maneja recepción de inscripciones, registro ordenado en Google Sheets sin
+ * variables duplicadas y envío de confirmaciones automáticas por correo.
+ */
+
+// ID de la Hoja de Cálculo de Google Sheets
+var SPREADSHEET_ID = '10bRWNhf4wm98doXomWTU5XMYcQu6FKUfGa-9eWzGJeE';
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  // Esperar hasta 30 segundos para evitar bloqueos concurrentes
+  lock.tryLock(30000);
+
+  try {
+    var ss;
+    try {
+      ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    } catch (errOpen) {
+      // Si el script está abierto directamente desde la hoja de cálculo (Extensiones > Apps Script)
+      ss = SpreadsheetApp.getActiveSpreadsheet();
+      if (!ss) throw errOpen;
+    }
+    // Usar la hoja 'Inscripciones' si existe, o la primera hoja activa
+    var sheet = ss.getSheetByName('Inscripciones') || ss.getActiveSheet();
+    var timestamp = new Date();
+
+    // Helper para normalizar parámetros que pueden venir como arrays o valores únicos
+    function normalizeArray(name) {
+      if (e.parameters && e.parameters[name] && e.parameters[name].length) {
+        return e.parameters[name];
+      }
+      var value = e.parameter ? e.parameter[name] : null;
+      if (!value) return [];
+      return Array.isArray(value) ? value : [value];
+    }
+
+    // 1. Participantes (Arrays)
+    var nombres = normalizeArray('participante_nombre[]');
+    var nacimientos = normalizeArray('participante_nacimiento[]');
+    var grupos = normalizeArray('participante_grupo[]');
+    var adultosAcompanantes = normalizeArray('participante_adulto_acompanante[]');
+
+    // 2. Datos del Tutor / Representante Legal
+    var tutorNombre = e.parameter.tutor_nombre || '';
+    var tutorDni = e.parameter.tutor_dni || '';
+    var tutorTelefono = e.parameter.tutor_telefono || '';
+    var tutorEmail = e.parameter.tutor_email || '';
+
+    // 3. Camiseta Oficial de Recuerdo
+    var camisetaOficial = e.parameter.camiseta || 'No';
+    var tallaCamiseta = (camisetaOficial === 'Sí') ? (e.parameter.talla_camiseta || 'Sin especificar') : 'No solicitada';
+
+    // 4. Logística, Salud y Talleres
+    var medicasObservaciones = e.parameter.medicas_observaciones || 'Ninguna';
+    var tallerPropuesto = e.parameter.taller_propuesto || 'Ninguno';
+
+    // 5. Espacio de Voluntariado
+    var voluntarioActivo = e.parameter.voluntario_activo || 'No';
+    var voluntarioDias = (voluntarioActivo === 'Sí') ? (e.parameter.voluntario_dias || 'Todos los días') : 'No participa';
+    var voluntarioDatos = (voluntarioActivo === 'Sí') ? (e.parameter.voluntario_datos || 'No especificado') : '-';
+
+    // 6. Economía / Aportaciones (¡Una sola vez por inscripción!)
+    var costeMaterial = e.parameter.coste_material || '0€';
+    var donacionVoluntaria = e.parameter.donacion_voluntaria || '0€';
+    var totalEstimado = e.parameter.total_estimado || '0€';
+    var metodoPago = e.parameter.metodo_pago || 'No especificado';
+
+    // 7. Acuerdos y Autorizaciones
+    var compromisoConvivencia = e.parameter.compromiso_aceptado || 'No';
+    var compromisoRopaTalleres = e.parameter.llevar_camiseta_blanca || 'No';
+    var autorizaImagen = e.parameter.autoriza_imagen || 'No';
+    var autorizacionMedica = e.parameter.autorizacion_medica || 'No';
+    var acompanamientoInfantil = e.parameter.acompanamiento_infantil_aceptado || 'No aplica';
+
+    // 8. Filtro Anti-Spam (Honeypot)
+    if (e.parameter.website_url_check && e.parameter.website_url_check.trim() !== '') {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        message: 'Spam detectado.'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 9. Verificación de Seguridad Anti-Bot
+    var captchaVerificado = e.parameter.captcha_verificado || 'No';
+    if (captchaVerificado !== 'Sí') {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        message: 'No se ha superado la verificación de seguridad anti-bot.'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Validaciones obligatorias de campos clave
+    if (!tutorNombre || !tutorDni || !tutorTelefono || !tutorEmail || compromisoConvivencia !== 'Sí' || autorizacionMedica !== 'Sí') {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        message: 'Faltan campos obligatorios del tutor o autorizaciones reglamentarias.'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (nombres.length === 0 || nacimientos.length === 0 || grupos.length === 0) {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        message: 'Debe haber al menos un participante registrado.'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Generar Localizador Único de Inscripción (Ej: NAV-26-8412)
+    var randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    var localizador = 'NAV-26-' + randomSuffix;
+
+    // Crear encabezados limpios y sin redundancias si la hoja está vacía
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        'Timestamp',
+        'Localizador',
+        'Nº Participantes',
+        'Listado de Participantes (Nombre, Nacimiento, Grupo)',
+        'Adulto Acompañante 5h (Etapa Infantil)',
+        'Tutor Nombre Completo',
+        'Tutor DNI / NIE',
+        'Tutor Teléfono',
+        'Tutor Correo Electrónico',
+        'Camiseta Recuerdo (Sí/No)',
+        'Talla Camiseta',
+        'Observaciones Médicas / Alergias',
+        'Taller o Talento Propuesto',
+        'Colabora como Voluntario',
+        'Días Disponibles Voluntario',
+        'Detalles / Preferencias Voluntario',
+        'Coste Material (5€/part)',
+        'Donación Voluntaria',
+        'Total Aporte Estimado',
+        'Método de Pago',
+        'Compromiso Convivencia',
+        'Compromiso Ropa Talleres',
+        'Autorización de Imagen',
+        'Autorización Médica'
+      ]);
+    }
+
+    // Formatear la lista de participantes en un solo bloque legible sin duplicar filas
+    var listaParticipantesFormateada = [];
+    var listaAcompanantesInfantil = [];
+
+    for (var i = 0; i < nombres.length; i++) {
+      var itemPart = (i + 1) + '. ' + nombres[i] + ' (Nac: ' + nacimientos[i] + ' - ' + grupos[i] + ')';
+      listaParticipantesFormateada.push(itemPart);
+
+      if (adultosAcompanantes && adultosAcompanantes[i] && adultosAcompanantes[i] !== 'No aplica' && adultosAcompanantes[i].trim() !== '') {
+        listaAcompanantesInfantil.push(nombres[i] + ': ' + adultosAcompanantes[i]);
+      }
+    }
+
+    var textoParticipantes = listaParticipantesFormateada.join('\n');
+    var textoAcompanantes = listaAcompanantesInfantil.length > 0 ? listaAcompanantesInfantil.join('\n') : 'No aplica';
+
+    // REGISTRO LIMPIO: UNA SOLA FILA POR INSCRIPCIÓN (Cero datos duplicados)
+    sheet.appendRow([
+      timestamp,
+      localizador,
+      nombres.length,
+      textoParticipantes,
+      textoAcompanantes,
+      tutorNombre,
+      tutorDni,
+      tutorTelefono,
+      tutorEmail,
+      camisetaOficial,
+      tallaCamiseta,
+      medicasObservaciones,
+      tallerPropuesto,
+      voluntarioActivo,
+      voluntarioDias,
+      voluntarioDatos,
+      costeMaterial,
+      donacionVoluntaria,
+      totalEstimado,
+      metodoPago,
+      compromisoConvivencia,
+      compromisoRopaTalleres,
+      autorizaImagen,
+      autorizacionMedica
+    ]);
+
+    // Opcional: Si en la hoja existe una pestaña llamada 'Participantes', guardar cada niño individualmente para pasar lista
+    var sheetParticipantes = ss.getSheetByName('Participantes');
+    if (sheetParticipantes) {
+      if (sheetParticipantes.getLastRow() === 0) {
+        sheetParticipantes.appendRow([
+          'Localizador',
+          'Nombre del Participante',
+          'Fecha Nacimiento',
+          'Grupo Asignado',
+          'Adulto Acompañante (Infantil 5h)',
+          'Tutor Contacto',
+          'Teléfono Urgencias',
+          'Observaciones Médicas / Alergias'
+        ]);
+      }
+      for (var j = 0; j < nombres.length; j++) {
+        var acomp = (adultosAcompanantes && adultosAcompanantes[j]) ? adultosAcompanantes[j] : 'No aplica';
+        sheetParticipantes.appendRow([
+          localizador,
+          nombres[j],
+          nacimientos[j],
+          grupos[j],
+          acomp,
+          tutorNombre,
+          tutorTelefono,
+          medicasObservaciones
+        ]);
+      }
+    }
+
+    // Enviar correo de confirmación al tutor
+    enviarCorreoConfirmacion(
+      localizador,
+      tutorNombre,
+      tutorEmail,
+      nombres,
+      nacimientos,
+      grupos,
+      adultosAcompanantes,
+      costeMaterial,
+      donacionVoluntaria,
+      totalEstimado,
+      metodoPago,
+      voluntarioActivo,
+      voluntarioDias
+    );
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      localizador: localizador,
+      message: '¡Inscripción registrada con éxito! Tu localizador es: ' + localizador
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    Logger.log('Error en doPost: ' + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: 'Error en el servidor: ' + error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function doGet(e) {
+  return ContentService.createTextOutput("Endpoint activo de Inscripción - Campus de Navidad Almería 2026").setMimeType(ContentService.MimeType.TEXT);
+}
+
+/**
+ * Envía un correo electrónico de confirmación al tutor
+ * (Tanto en HTML con diseño profesional como en texto plano limpio, 100% libre de emojis conflictivos)
+ */
+function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres, nacimientos, grupos, adultosAcompanantes, costeMaterial, donacionVoluntaria, totalEstimado, metodoPago, voluntarioActivo, voluntarioDias) {
+  var asunto = 'Inscripción confirmada [' + localizador + '] - Campus de Navidad Almería';
+
+  // 1. Lista de participantes para HTML
+  var participantesHtml = nombres.map(function(nombre, index) {
+    var acompanante = (adultosAcompanantes && adultosAcompanantes[index] && adultosAcompanantes[index] !== 'No aplica') 
+      ? '<br><small style="color: #b45309; font-weight: 600;">[Acompañante adulto 5 horas obligatorias: ' + adultosAcompanantes[index] + ']</small>' 
+      : '';
+    return '<li style="margin-bottom: 10px; line-height: 1.5;"><strong>' + nombre + '</strong> &mdash; ' + nacimientos[index] + ' (' + grupos[index] + ')' + acompanante + '</li>';
+  }).join('');
+
+  // 2. Lista de participantes para Texto Plano
+  var participantesTextoPlano = nombres.map(function(nombre, index) {
+    var acompTxt = (adultosAcompanantes && adultosAcompanantes[index] && adultosAcompanantes[index] !== 'No aplica')
+      ? '\n   [Acompañante adulto obligatorio 5h: ' + adultosAcompanantes[index] + ']'
+      : '';
+    return '• ' + nombre + ' (' + nacimientos[index] + ' - ' + grupos[index] + ')' + acompTxt;
+  }).join('\n');
+
+  // 3. Versión de Texto Plano (para notificaciones de móvil, previsualizaciones y clientes de correo sin HTML)
+  var cuerpoTextoPlano = 
+    'CAMPUS DE NAVIDAD 2026 - ALMERÍA\n' +
+    'Inscripción Confirmada | Localizador: ' + localizador + '\n\n' +
+    'Estimado/a ' + tutorNombre + ',\n\n' +
+    'Hemos registrado correctamente la inscripción para el Campus de Navidad 2026.\n' +
+    'Nos alegra enormemente contar con su participación para construir comunidad en estos días de convivencia.\n\n' +
+    'FECHAS DEL CAMPUS:\n' +
+    '• Días de actividad: 23, 24, 28, 29 y 30 de Diciembre.\n' +
+    '• Gran Fiesta de Fin de Campus: Día 30 de Diciembre a las 17:00 h (5:00 PM).\n\n' +
+    'PARTICIPANTES INSCRITOS:\n' +
+    participantesTextoPlano + '\n\n' +
+    'RESUMEN DE APORTACIÓN Y MATERIAL:\n' +
+    '• Asistencia al campus: ¡100% Gratuita!\n' +
+    '• Material de talleres (5€/participante): ' + costeMaterial + '\n' +
+    (donacionVoluntaria !== '0€' ? ('• Donación voluntaria para el proyecto: ' + donacionVoluntaria + '\n') : '') +
+    '• Total aportación estimada: ' + totalEstimado + '\n' +
+    '• Método de abono seleccionado: ' + metodoPago + '\n\n' +
+    'OPCIONES PARA REALIZAR LA APORTACIÓN:\n' +
+    '1. Bizum: Al número 634541119 (Eliana B.R.) indicando concepto: "' + localizador + ' - ' + tutorNombre + '"\n' +
+    '2. En efectivo: El primer día de campus (por favor, acudir 15 minutos antes).\n\n' +
+    (voluntarioActivo === 'Sí' ? 
+      ('COLABORACIÓN COMO VOLUNTARIO/A:\n' +
+       '• Has indicado disponibilidad para los días: ' + voluntarioDias + '\n' +
+       '• El equipo organizador se pondrá en contacto contigo. ¡Muchísimas gracias por tu apoyo!\n\n') : '') +
+    'RECORDATORIO IMPORTANTE:\n' +
+    'Los participantes de la etapa infantil deben asistir siempre acompañados de un adulto responsable durante las 5 horas del campus.\n' +
+    'Se recomienda asistir con ropa cómoda apta para talleres y manualidades.\n\n' +
+    'Para cualquier consulta, puedes responder a este correo o escribir a ael.garrucha@bahai.es\n\n' +
+    'Campus de Navidad 2026 · Construyendo Comunidad';
+
+  // 4. Versión HTML (diseño limpio con tipografía y tarjetas, sin iconos ni emojis propensos a fallar)
+  var cuerpoHTML = '<!DOCTYPE html>' +
+    '<html>' +
+    '<head>' +
+      '<meta charset="UTF-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+    '</head>' +
+    '<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif;">' +
+      '<div style="max-width: 620px; margin: 20px auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #1e293b;">' +
+
+        // Encabezado
+        '<div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 20px;">' +
+          '<span style="display: inline-block; background-color: #dbeafe; color: #1d4ed8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">' +
+            'Asociación Sin Ánimo de Lucro' +
+          '</span>' +
+          '<h2 style="color: #1e3a8a; margin: 12px 0 6px 0; font-size: 24px; font-weight: 700;">' +
+            'Inscripción Confirmada' +
+          '</h2>' +
+          '<p style="color: #64748b; margin: 0; font-size: 14px;">' +
+            'Campus de Navidad 2026 &bull; Localizador: <strong style="color: #1e40af; font-family: monospace; font-size: 16px;">' + localizador + '</strong>' +
+          '</p>' +
+        '</div>' +
+
+        // Saludo
+        '<p style="font-size: 15px; line-height: 1.5; margin: 0 0 12px 0;">' +
+          'Estimado/a <strong>' + tutorNombre + '</strong>,' +
+        '</p>' +
+        '<p style="font-size: 15px; line-height: 1.5; margin: 0 0 18px 0; color: #334155;">' +
+          'Hemos registrado correctamente la inscripción para el <strong>Campus de Navidad</strong>. Nos alegra enormemente contar con su participación para construir comunidad en estos días de convivencia.' +
+        '</p>' +
+
+        // Bloque 1: Fechas y Horarios
+        '<div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; border-radius: 8px; margin: 20px 0;">' +
+          '<h4 style="margin: 0 0 8px 0; color: #1e40af; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">' +
+            'Fechas del Campus' +
+          '</h4>' +
+          '<p style="margin: 4px 0; font-size: 14px; color: #1e293b;">' +
+            '<strong>Días de actividad:</strong> 23, 24, 28, 29 y 30 de Diciembre.' +
+          '</p>' +
+          '<p style="margin: 6px 0 0 0; font-size: 14px; color: #b45309; font-weight: 600;">' +
+            'Fiesta de Fin de Campus: Día 30 de Diciembre a las 17:00 h (5:00 PM).' +
+          '</p>' +
+        '</div>' +
+
+        // Bloque 2: Participantes
+        '<div style="margin: 20px 0;">' +
+          '<h4 style="color: #0f172a; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">' +
+            'Participantes Inscritos' +
+          '</h4>' +
+          '<ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #334155; line-height: 1.6;">' +
+            participantesHtml +
+          '</ul>' +
+        '</div>' +
+
+        // Bloque 3: Aportación y Materiales
+        '<div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 20px 0;">' +
+          '<h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">' +
+            'Resumen de Aportación y Material' +
+          '</h4>' +
+          '<table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #334155;">' +
+            '<tr>' +
+              '<td style="padding: 4px 0;">Asistencia al campus:</td>' +
+              '<td style="padding: 4px 0; text-align: right; font-weight: 600; color: #059669;">100% Gratuita</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td style="padding: 4px 0;">Material de talleres (5€/participante):</td>' +
+              '<td style="padding: 4px 0; text-align: right; font-weight: 600;">' + costeMaterial + '</td>' +
+            '</tr>' +
+            (donacionVoluntaria !== '0€' ? 
+              '<tr>' +
+                '<td style="padding: 4px 0;">Donación voluntaria para el proyecto:</td>' +
+                '<td style="padding: 4px 0; text-align: right; font-weight: 600;">' + donacionVoluntaria + '</td>' +
+              '</tr>' : '') +
+            '<tr style="border-top: 1px solid #cbd5e1;">' +
+              '<td style="padding: 8px 0 4px 0; font-weight: bold; color: #0f172a;">Total aporte estimado:</td>' +
+              '<td style="padding: 8px 0 4px 0; text-align: right; font-weight: bold; color: #1d4ed8; font-size: 16px;">' + totalEstimado + '</td>' +
+            '</tr>' +
+          '</table>' +
+
+          '<div style="margin-top: 14px; padding: 12px; background-color: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 13px; color: #475569; line-height: 1.5;">' +
+            '<strong style="color: #1e293b; display: block; margin-bottom: 4px;">Instrucciones para la aportación:</strong>' +
+            '&bull; <strong>Bizum:</strong> Al número <strong>634541119</strong> (Eliana B.R.) indicando como concepto: <code style="background-color: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #1e40af;">' + localizador + ' - ' + tutorNombre + '</code><br>' +
+            '&bull; <strong>En efectivo:</strong> El primer día de campus (les solicitamos acudir 15 minutos antes del inicio).' +
+          '</div>' +
+        '</div>' +
+
+        // Bloque 4: Voluntariado si aplica
+        (voluntarioActivo === 'Sí' ? 
+          '<div style="background-color: #fefce8; border-left: 4px solid #eab308; padding: 12px 15px; border-radius: 6px; margin: 20px 0; font-size: 13px; color: #713f12; line-height: 1.5;">' +
+            '<strong>Colaboración como Voluntario/a:</strong> Has indicado disponibilidad en: <strong>' + voluntarioDias + '</strong>. ¡Muchísimas gracias por tu espíritu de servicio! El equipo de coordinación se pondrá en contacto contigo.' +
+          '</div>' : '') +
+
+        // Nota Informativa
+        '<p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 25px 0 0 0; background-color: #f8fafc; padding: 10px 14px; border-radius: 6px;">' +
+          '<em>Recordatorio importante:</em> Los participantes de la etapa infantil deben asistir siempre acompañados de un adulto responsable durante las 5 horas del campus. Se recomienda asistir con ropa cómoda apta para manualidades y actividades prácticas.' +
+        '</p>' +
+
+        // Pie de página
+        '<div style="text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">' +
+          '<p style="margin: 0; font-weight: 600; color: #64748b;">Campus de Navidad 2026 &bull; Construyendo Comunidad</p>' +
+          '<p style="margin: 4px 0 0 0;">Para cualquier consulta, puedes responder a este correo o escribir a <a href="mailto:ael.garrucha@bahai.es" style="color: #2563eb; text-decoration: none;">ael.garrucha@bahai.es</a></p>' +
+        '</div>' +
+      '</div>' +
+    '</body>' +
+    '</html>';
+
+  try {
+    GmailApp.sendEmail(tutorEmail, asunto, cuerpoTextoPlano, {
+      htmlBody: cuerpoHTML,
+      bcc: 'ael.garrucha@bahai.es'
+    });
+    Logger.log('[OK] Correo enviado satisfactoriamente a: ' + tutorEmail);
+  } catch (err) {
+    Logger.log('[ERROR] Error al enviar correo con GmailApp: ' + err.toString());
+  }
+}
+
+/**
+ * =========================================================================
+ * FUNCIONES DE AUTORIZACIÓN Y PRUEBA (TESTING)
+ * =========================================================================
+ */
+
+/**
+ * PASO 1 OBLIGATORIO: CONCEDER PERMISOS
+ * Ejecuta esta función primero para que Google te muestre la ventana emergente
+ * de "Se requiere autorización" y puedas aceptar los permisos de Google Sheets y Gmail.
+ */
+function autorizarPermisos() {
+  Logger.log('[INICIO] Solicitando permisos para Google Sheets...');
+  var ss;
+  try {
+    ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  } catch (e) {
+    ss = SpreadsheetApp.getActiveSpreadsheet();
+  }
+  Logger.log('[OK] Acceso concedido a la hoja de cálculo: ' + ss.getName());
+
+  Logger.log('[INICIO] Solicitando permisos para Gmail...');
+  var cuota = GmailApp.getRemainingDailyQuota();
+  Logger.log('[OK] Acceso concedido a Gmail. Cuota de correos disponible hoy: ' + cuota);
+  Logger.log('[INFO] Permisos listos. Ahora ya puedes seleccionar y ejecutar testDoPost().');
+}
+
+/**
+ * PASO 2: EJECUTAR TEST DE INSERCIÓN
+ * Selecciona 'testDoPost' en el desplegable superior y haz clic en 'Ejecutar'.
+ */
+function testDoPost() {
+  Logger.log('[INICIO] Iniciando test con Google Sheet ID: ' + SPREADSHEET_ID);
+
+  var fakeEvent = {
+    parameter: {
+      tutor_nombre: 'María García López (Tutor de Prueba)',
+      tutor_dni: '12345678Z',
+      tutor_telefono: '612345678',
+      tutor_email: Session.getActiveUser().getEmail() || 'prueba@ejemplo.com',
+      camiseta: 'Sí',
+      talla_camiseta: 'Infantil 7-8 años',
+      medicas_observaciones: 'Alergia al gluten y asma leve',
+      taller_propuesto: 'Taller de manualidades navideñas',
+      voluntario_activo: 'Sí',
+      voluntario_dias: '23 Dic, 24 Dic, 30 Dic (Fiesta 17h)',
+      voluntario_datos: 'Disponible para apoyo en dinámicas y meriendas',
+      coste_material: '10€',
+      donacion_voluntaria: '10€',
+      total_estimado: '20€',
+      metodo_pago: 'Bizum',
+      compromiso_aceptado: 'Sí',
+      llevar_camiseta_blanca: 'Sí',
+      autoriza_imagen: 'Sí',
+      autorizacion_medica: 'Sí',
+      acompanamiento_infantil_aceptado: 'Sí',
+      captcha_verificado: 'Sí',
+      website_url_check: ''
+    },
+    parameters: {
+      'participante_nombre[]': [
+        'Lucía Martínez García',
+        'Mateo Martínez García'
+      ],
+      'participante_nacimiento[]': [
+        '2021-04-12',
+        '2016-09-25'
+      ],
+      'participante_grupo[]': [
+        'Etapa Infantil (3-5 años)',
+        '1º a 5º de Primaria (~6-10 años)'
+      ],
+      'participante_adulto_acompanante[]': [
+        'María García López (Madre - 5 horas)',
+        'No aplica'
+      ]
+    }
+  };
+
+  try {
+    var resultado = doPost(fakeEvent);
+    var contenido = JSON.parse(resultado.getContent());
+
+    Logger.log('----------------------------------------------------');
+    Logger.log('[ESTADO] ' + (contenido.success ? 'EXITO' : 'FALLO'));
+    Logger.log('[MENSAJE] ' + contenido.message);
+    if (contenido.localizador) {
+      Logger.log('[LOCALIZADOR] ' + contenido.localizador);
+    }
+    Logger.log('----------------------------------------------------');
+
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('Inscripciones') || ss.getActiveSheet();
+    var ultimaFila = sheet.getLastRow();
+    var numColumnas = sheet.getLastColumn();
+    var datosUltimaFila = sheet.getRange(ultimaFila, 1, 1, numColumnas).getValues()[0];
+
+    Logger.log('[INFO] Ultima fila registrada (Fila ' + ultimaFila + ' con ' + numColumnas + ' columnas):');
+    Logger.log(JSON.stringify(datosUltimaFila, null, 2));
+    Logger.log('[OK] Test finalizado con exito.');
+
+  } catch (err) {
+    Logger.log('[ERROR] Error durante la ejecucion del test: ' + err.toString());
+  }
+}
+
+/**
+ * Función para comprobar los nombres de las columnas en tu hoja de Google Sheets
+ */
+function testVerificarEncabezados() {
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName('Inscripciones') || ss.getActiveSheet();
+
+  if (sheet.getLastRow() === 0) {
+    Logger.log('[INFO] La hoja está vacía. Ejecuta testDoPost() primero para inicializar encabezados.');
+    return;
+  }
+
+  var encabezados = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  Logger.log('[INFO] Encabezados actuales en Google Sheets (' + encabezados.length + ' columnas):');
+  for (var i = 0; i < encabezados.length; i++) {
+    Logger.log('Columna ' + (i + 1) + ': ' + encabezados[i]);
+  }
+}

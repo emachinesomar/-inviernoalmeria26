@@ -1,0 +1,9 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Configuración y cachés internas
+.atl/
+conferencia-sur-main/
+*.log
+*.tmp
