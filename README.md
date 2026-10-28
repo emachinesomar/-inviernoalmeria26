@@ -1,31 +1,37 @@
-# Campus de Navidad 2026 · Construyendo Comunidad (Almería)
+# VII Campus de Invierno «Sembrando Futuro» (Edición Navidad)
+**Organiza: Instituto Bahá'í de Capacitación para el Desarrollo Comunitario · Garrucha (Almería)**
 
-Formulario web moderno, completamente adaptativo y sistema backend basado en **Google Apps Script** y **Google Sheets** para la gestión integral de inscripciones al Campus de Navidad 2026.
+Formulario web moderno, completamente adaptativo y sistema backend basado en **Google Apps Script** y **Google Sheets** para la gestión integral de inscripciones al VII Campus de Invierno «Sembrando Futuro».
 
 ---
 
 ## 🌟 Características Principales
 
 ### 1. Frontend Responsivo y Adaptativo ([index.html](index.html))
+- **Identidad institucional y bienvenida pedagógica**:
+  - Distintivo visual del **Instituto Bahá'í de Capacitación para el Desarrollo Comunitario (Garrucha)** con su logotipo oficial.
+  - Sección introductoria completa sobre los objetivos de convivencia intercultural en Garrucha y la metodología pedagógica del **Instituto Ruhí**.
+  - Desglose detallado del programa de contenidos para **Niños** (Mindfulness, valores, arte, talleres) y **Adolescentes** (Mindfulness, deporte, reflexión moral sobre relatos internacionales y servicio comunitario).
 - **Diseño visual moderno**: Tipografía *Plus Jakarta Sans* y *Outfit*, Tailwind CSS, tarjetas glassmorphism y micro-interacciones.
 - **Compatibilidad móvil rigurosa**: Cumple con el estándar de compatibilidad para **iOS y iPadOS (versión 12 hasta la más reciente)**, evitando el zoom automático en inputs de Safari (`font-size: 16px`), `viewport-fit=cover` y safe areas.
 - **Gestión dinámica de participantes**:
   - Cálculo automático de edad según la fecha de nacimiento.
-  - Asignación inteligente a grupos de edad:
-    - *Etapa Infantil (3 a 5 años)*: Exige campo obligatorio para indicar el adulto acompañante durante las 5 horas del campus y la aceptación de dicha responsabilidad.
-    - *1º a 5º de Primaria (~6-10 años)*: Asistencia autónoma.
-    - *6º de Primaria a 3º de la ESO (~11-14 años)*: Asistencia autónoma.
-    - *A partir de 4º de la ESO (15+ años)*: Grupo formativo y voluntariado.
-- **Logística, talleres y recuerdos**:
-  - Selección opcional de camiseta de recuerdo con tallas organizadas (infantiles y adultos).
+  - Asignación inteligente a grupos sin edades entre paréntesis:
+    - *Etapa Infantil (3 a 5 años)*: Exige adulto acompañante durante las 5 horas completas del campus.
+    - *1º a 3º de Primaria*: Asistencia autónoma.
+    - *4º a 5º de Primaria*: Asistencia autónoma.
+    - *6º de Primaria a 3º de la ESO*: Asistencia autónoma con dinámicas adaptadas.
+    - *A partir de 4º de la ESO*: Grupo formativo y voluntariado.
+- **Logística, talleres y autorizaciones**:
   - Campo para observaciones médicas y alergias alimentarias.
-  - Propuestas de talleres impartidos por las familias.
+  - Propuestas de talleres familiares o de talentos locales.
+  - Autorización explícita de participación con selector afirmativo/negativo (sin términos médicos innecesarios).
 - **Área de voluntariado**:
   - Selector individual o completo de los días del evento (23, 24, 28, 29 y 30 de Diciembre).
 - **Cálculo de aportaciones en tiempo real**:
-  - Asistencia al campus 100% gratuita.
-  - Aporte de material: 5€ por participante registrado.
-  - Selector de donación voluntaria (0€, 5€, 10€, 20€ u otro importe).
+  - Asistencia al campus 100% gratuita gracias a monitores voluntarios.
+  - Coste real de material: 5€ por participante registrado (donación sugerida).
+  - Selector de donación voluntaria extra (0€, 5€, 10€, 20€ u otro importe).
   - Opciones de abono: **Bizum** (con copia rápida del teléfono de contacto) o en efectivo el primer día.
 - **Seguridad y Control Anti-Bot**:
   - Campo trampa (*Honeypot*) invisible para scripts automatizados.

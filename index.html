@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <title>Campus de Navidad 2026 · Construyendo Comunidad</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <meta name="description" content="Inscripción al Campus de Navidad 2026 - Una experiencia formativa y comunitaria para niños y jóvenes">
-    <meta name="keywords" content="Campus, Navidad, Invierno, Almería, 2026, Niños, Prejóvenes, Voluntariado, Asociación">
-    <meta name="author" content="Asociación Sin Ánimo de Lucro">
+    <title>VII Campus de Invierno «Sembrando Futuro» · Instituto Bahá'í Garrucha</title>
+    <link rel="shortcut icon" href="logo_instituto.png" type="image/png">
+    <meta name="description" content="Inscripción al VII Campus de Invierno «Sembrando Futuro» (Edición Navidad) organizado por el Instituto Bahá'í de Capacitación para el Desarrollo Comunitario en Garrucha.">
+    <meta name="keywords" content="Campus, Invierno, Navidad, Garrucha, Almería, Instituto Bahá'í, Ruhí, Sembrando Futuro, Niños, Prejóvenes, Valores, Educación">
+    <meta name="author" content="Instituto Bahá'í de Capacitación para el Desarrollo Comunitario (Garrucha)">
     <meta name="robots" content="index, follow">
 
     <!-- Tailwind CSS CDN -->
@@ -77,7 +77,7 @@
             }
         }
 
-        input, textarea, select {
+        input:not([type="checkbox"]):not([type="radio"]), textarea, select {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -203,6 +203,198 @@
             user-select: none;
             animation: snowfall 8s linear infinite;
         }
+
+        /* Feedback táctil e interactivo de clic para TODOS los botones */
+        button,
+        input[type="button"],
+        input[type="submit"],
+        .btn-clickable {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            cursor: pointer;
+            transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.12s cubic-bezier(0.4, 0, 0.2, 1),
+                        filter 0.12s cubic-bezier(0.4, 0, 0.2, 1),
+                        background-color 0.15s ease,
+                        border-color 0.15s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efecto al presionar / clic activo en cualquier botón */
+        button:active:not(:disabled),
+        input[type="button"]:active:not(:disabled),
+        input[type="submit"]:active:not(:disabled),
+        .btn-clickable:active {
+            transform: scale(0.95) translateY(2px) !important;
+            filter: brightness(0.9) !important;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        /* Micro-animación de rebote elástico al soltar el clic */
+        .btn-clicked {
+            animation: buttonClickBounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes buttonClickBounce {
+            0% { transform: scale(0.94) translateY(2px); }
+            45% { transform: scale(1.04) translateY(-1px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+
+        /* Efecto onda expansiva (Ripple) dinámico */
+        .click-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.45);
+            transform: scale(0);
+            animation: rippleAnim 0.5s ease-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .bg-white .click-ripple,
+        .bg-slate-50 .click-ripple,
+        .bg-blue-50 .click-ripple,
+        .bg-slate-100 .click-ripple {
+            background: rgba(30, 58, 138, 0.2);
+        }
+
+        @keyframes rippleAnim {
+            to {
+                transform: scale(3.5);
+                opacity: 0;
+            }
+        }
+
+        /* Feedback táctil en opciones seleccionables */
+        label.cursor-pointer {
+            transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+            touch-action: manipulation;
+        }
+
+        label.cursor-pointer:active {
+            transform: scale(0.985);
+            filter: brightness(0.96);
+        }
+
+        /* Tarjetas interactivas de días de voluntariado */
+        .voluntario-dia-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 0.9rem;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background-color: #ffffff;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            min-height: 58px;
+        }
+
+        .voluntario-dia-card:hover {
+            border-color: #93c5fd;
+            background-color: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.08);
+        }
+
+        .voluntario-dia-card:active {
+            transform: scale(0.96) translateY(1px);
+        }
+
+        /* Estado SELECCIONADO (Día individual activo) */
+        .voluntario-dia-card.is-selected {
+            border-color: #2563eb !important;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+            box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.3), 0 0 0 1px rgba(37, 99, 235, 0.2) !important;
+            transform: translateY(-1px);
+        }
+
+        .voluntario-dia-card.is-selected .dia-title {
+            color: #1e3a8a !important;
+            font-weight: 800 !important;
+        }
+
+        .voluntario-dia-card.is-selected .dia-subtext {
+            color: #2563eb !important;
+            font-weight: 600 !important;
+        }
+
+        /* Indicador circular de verificación */
+        .dia-check-indicator {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: transparent;
+            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .voluntario-dia-card:hover .dia-check-indicator {
+            border-color: #93c5fd;
+        }
+
+        .voluntario-dia-card.is-selected .dia-check-indicator {
+            border-color: #2563eb !important;
+            background-color: #2563eb !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4) !important;
+            transform: scale(1.05);
+        }
+
+        /* Tarjeta especial "Todos los días" */
+        .voluntario-dia-card.card-todos-dias {
+            border: 2px dashed #93c5fd;
+            background-color: #f8fafc;
+        }
+
+        .voluntario-dia-card.card-todos-dias:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        .voluntario-dia-card.card-todos-dias .dia-check-indicator {
+            border-color: #93c5fd;
+            color: #93c5fd;
+        }
+
+        .voluntario-dia-card.card-todos-dias.is-selected {
+            border: 2px solid #1e3a8a !important;
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
+            box-shadow: 0 6px 20px -2px rgba(30, 58, 138, 0.38) !important;
+            transform: translateY(-1px);
+        }
+
+        .voluntario-dia-card.card-todos-dias.is-selected .dia-title {
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+
+        .voluntario-dia-card.card-todos-dias.is-selected .dia-subtext {
+            color: #dbeafe !important;
+            font-weight: 600 !important;
+        }
+
+        .voluntario-dia-card.card-todos-dias.is-selected .dia-check-indicator {
+            border-color: #ffffff !important;
+            background-color: #ffffff !important;
+            color: #1e3a8a !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+        }
     </style>
 </head>
 
@@ -217,15 +409,23 @@
         <div class="snowflake" style="left: 88%; animation-duration: 12s; animation-delay: 2s;"><i class="fas fa-snowflake"></i></div>
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-semibold tracking-wide text-festive-ice mb-4">
-                <i class="fas fa-heart text-red-400"></i> Asociación Sin Ánimo de Lucro
+            <!-- Distintivo institucional con logo de la entidad organizadora -->
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 shadow-lg mb-5 text-left max-w-full">
+                <img src="logo_instituto.png" alt="Instituto Bahá'í Garrucha" class="w-10 h-10 object-contain rounded-full bg-white p-0.5 shadow flex-shrink-0">
+                <div class="min-w-0">
+                    <span class="block text-[11px] uppercase font-extrabold tracking-widest text-amber-300">Organiza</span>
+                    <span class="block text-xs sm:text-sm font-bold text-white tracking-wide truncate sm:whitespace-normal">Instituto Bahá'í de Capacitación y Desarrollo Comunitario · Garrucha</span>
+                </div>
             </div>
 
-            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-white">
-                Campus de Navidad 2026
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-2 text-white font-outfit">
+                VII Campus de Invierno
             </h1>
-            <p class="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto mb-6 font-normal leading-relaxed">
-                Un espacio comunitario de crecimiento, amistad, valores y diversión para niños y jóvenes durante las vacaciones de invierno.
+            <div class="text-2xl sm:text-3xl font-extrabold text-yellow-300 mb-4 tracking-wide font-outfit">
+                «Sembrando Futuro» <span class="text-base sm:text-lg font-medium text-blue-100 block sm:inline mt-1 sm:mt-0">(Edición Navidad)</span>
+            </div>
+            <p class="text-base sm:text-lg text-blue-100 max-w-2xl mx-auto mb-6 font-normal leading-relaxed">
+                Un espacio comunitario de crecimiento, amistad, valores y servicio para niños, adolescentes y familias durante las vacaciones de invierno.
             </p>
 
             <!-- Grid de Fechas y Claves del Evento -->
@@ -256,7 +456,7 @@
                     </div>
                     <div>
                         <span class="text-xs text-emerald-200 block uppercase font-bold tracking-wider">Campus Gratuito</span>
-                        <span class="text-sm font-semibold text-white">5€ material + Donación vol.</span>
+                        <span class="text-sm font-semibold text-white">5€ material (Donación voluntaria)</span>
                     </div>
                 </div>
             </div>
@@ -264,7 +464,139 @@
     </header>
 
     <!-- Contenedor Principal del Formulario -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 pb-20 relative z-20">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 pb-20 relative z-20 space-y-8">
+
+        <!-- PRESENTACIÓN INSTITUCIONAL E INTRODUCCIÓN DEL CAMPUS -->
+        <section class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl border border-white/80 bg-gradient-to-b from-white via-white to-blue-50/40">
+            <!-- Encabezado con logo y bienvenida -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 mb-6 pb-6 border-b border-slate-100 text-center sm:text-left">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-700 to-indigo-900 flex items-center justify-center p-2 shadow-md flex-shrink-0 border border-blue-200/50">
+                    <img src="logo_instituto.png" alt="Instituto Bahá'í" class="w-full h-full object-contain filter drop-shadow">
+                </div>
+                <div>
+                    <span class="inline-block text-xs font-bold uppercase tracking-wider text-blue-800 bg-blue-100/80 px-3 py-1 rounded-full mb-1">
+                        Instituto Bahá'í de Capacitación para el Desarrollo Comunitario · Garrucha
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+                        ¡Bienvenidos/as al VII Campus de Invierno!
+                    </h2>
+                    <p class="text-sm font-semibold text-amber-600">Edición Navidad · «Sembrando Futuro»</p>
+                </div>
+            </div>
+
+            <!-- Cuerpo del mensaje institucional -->
+            <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+                <p>
+                    Nuestro objetivo es reflexionar con las familias y amigos de Garrucha cómo desarrollar valores morales necesarios para un desarrollo comunitario basado en el respeto y el diálogo con otras culturas, credos o religiones. En nuestra zona coexisten personas de diferentes orígenes, creencias y pensamientos y el Instituto de Capacitación trabaja de manera altruista en el ámbito educativo para cultivar valores que nos permitan colaborar y construir un pueblo cada vez más intercultural.
+                </p>
+                <div class="p-4 sm:p-5 rounded-2xl bg-blue-50/80 border border-blue-100/80 text-slate-700 text-sm leading-relaxed">
+                    <div class="font-bold text-blue-900 mb-1.5 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-blue-600"></i> Metodología Pedagógica del Instituto Ruhí de Capacitación
+                    </div>
+                    <p>
+                        Este Campus de Invierno va a realizarse bajo las ideas metodológicas y pedagógicas del Instituto Ruhí de Capacitación que en pocas palabras cree en la nobleza del ser humano por naturaleza y desarrolla la capacidad de ayudar y servir a otros mientras uno reflexiona cada día cómo ser un ciudadano más útil para su comunidad. En esta metodología no hay maestros que explican de forma que uno sabe y enseña y otro escucha y aprende; por el contrario, la figura que acompaña al niño o adolescente es alguien que alienta, apoya y fomenta la sed de conocimiento desde una posición de igualdad.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Programa de Contenidos: Niños y Adolescentes -->
+            <div class="mt-6 pt-6 border-t border-slate-100">
+                <div class="mb-4 text-center sm:text-left">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 flex items-center justify-center sm:justify-start gap-2">
+                        <i class="fas fa-clipboard-list text-blue-600"></i> Programa de Contenidos del Campus
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                        Actividades organizadas según la etapa de desarrollo:
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Tarjeta NIÑOS -->
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50/90 to-orange-50/50 border border-amber-200/80 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-700 block">Etapa Infantil y Primaria</span>
+                                <h4 class="text-base font-extrabold text-slate-800">NIÑOS</h4>
+                            </div>
+                        </div>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-amber-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Mindfulness y conexión.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-amber-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Reflexión sobre valores:</strong> cómo desarrollar determinados valores (amor, unidad, amistad...).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-amber-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Canciones.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-amber-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Juegos y dinámicas.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-amber-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Arte.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-amber-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Diversos talleres</strong> llevados por familias y vecinos.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tarjeta ADOLESCENTES -->
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-blue-50/90 to-indigo-50/50 border border-blue-200/80 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg shadow-sm">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">Prejóvenes y Jóvenes</span>
+                                <h4 class="text-base font-extrabold text-slate-800">ADOLESCENTES</h4>
+                            </div>
+                        </div>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-blue-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Mindfulness y conexión.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-blue-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Canciones.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-blue-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Deporte.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-blue-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Juegos y Canciones.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-blue-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Reflexiones morales:</strong> cómo desarrollar una moral más sólida a través de historias de adolescentes que viven alrededor del mundo.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-blue-600 mt-1 flex-shrink-0 text-xs"></i>
+                                <span><strong>Servicio comunitario.</strong></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <span class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-blue-700 to-indigo-700 text-white font-extrabold text-sm sm:text-base shadow uppercase tracking-wide">
+                        <i class="fas fa-star text-yellow-300"></i> ¡Ven y participa!
+                    </span>
+                </div>
+            </div>
+        </section>
 
         <!-- Formulario Oficial -->
         <form id="campusRegistrationForm" class="space-y-8" novalidate>
@@ -289,11 +621,12 @@
                     <div class="font-bold flex items-center gap-2 text-amber-800 mb-1">
                         <i class="fas fa-info-circle text-amber-600"></i> Etapas y política de acompañamiento:
                     </div>
-                    <ul class="list-disc pl-5 space-y-1 text-slate-700 mt-2">
+                    <ul class="list-disc pl-5 space-y-1.5 text-slate-700 mt-2">
                         <li><strong>Etapa Infantil (3-5 años):</strong> Deben asistir <u>siempre acompañados por un adulto responsable</u>, que permanecerá las 5 horas del campus con ellos.</li>
-                        <li><strong>1º a 5º de Primaria (~6-10 años):</strong> Pueden asistir de forma autónoma (se quedan solos).</li>
-                        <li><strong>6º de Primaria a 3º de la ESO (~11-14 años):</strong> Asistencia autónoma con dinámicas adaptadas.</li>
-                        <li><strong>A partir de 4º de la ESO (15+ años):</strong> Grupo de voluntariado, dinamización y formación.</li>
+                        <li><strong>1º a 3º de Primaria:</strong> Pueden asistir de forma autónoma (se quedan solos).</li>
+                        <li><strong>4º a 5º de Primaria:</strong> Pueden asistir de forma autónoma (se quedan solos).</li>
+                        <li><strong>6º de Primaria a 3º de la ESO:</strong> Asistencia autónoma con dinámicas adaptadas.</li>
+                        <li><strong>A partir de 4º de la ESO:</strong> Grupo de voluntariado, dinamización y formación.</li>
                     </ul>
                 </div>
 
@@ -304,7 +637,7 @@
 
                 <!-- Botón Añadir Participante -->
                 <div class="mt-5">
-                    <button type="button" id="btnAddParticipant" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold text-sm border border-blue-200 transition-colors">
+                    <button type="button" id="btnAddParticipant" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 font-semibold text-sm border border-blue-200 transition-all shadow-sm active:scale-95 active:bg-blue-200 active:shadow-inner cursor-pointer">
                         <i class="fas fa-user-plus"></i> Añadir otro participante
                     </button>
                 </div>
@@ -415,33 +748,83 @@
                     <!-- Campos condicionales de voluntariado -->
                     <div id="seccion_voluntariado_dias" class="hidden space-y-4 pt-2 pl-2">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                ¿Qué día(s) tienes disponibilidad para colaborar?
-                            </label>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-sm">
-                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
-                                    <input type="checkbox" name="voluntario_dias[]" value="23 Dic" class="rounded text-blue-600">
-                                    <span>23 Diciembre</span>
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                                <label class="block text-sm font-bold text-slate-800">
+                                    ¿Qué día(s) tienes disponibilidad para colaborar?
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
-                                    <input type="checkbox" name="voluntario_dias[]" value="24 Dic" class="rounded text-blue-600">
-                                    <span>24 Diciembre</span>
+                                <div id="voluntario_dias_counter" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 transition-all">
+                                    <i class="fas fa-calendar-alt text-blue-600"></i>
+                                    <span id="voluntario_dias_counter_text">0 días seleccionados</span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-xs text-slate-500 mb-3 flex items-center gap-1.5">
+                                <i class="fas fa-info-circle text-blue-500"></i>
+                                <span>Puedes seleccionar <strong>un solo día</strong>, varios días sueltos o <strong>«Todos los días»</strong> (haz clic en las tarjetas):</span>
+                            </p>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-sm" id="contenedor_voluntario_dias">
+                                <!-- 23 Diciembre -->
+                                <label class="voluntario-dia-card btn-clickable" id="card_dia_23">
+                                    <input type="checkbox" name="voluntario_dias[]" value="23 Dic" class="sr-only volunteer-day-checkbox">
+                                    <span class="dia-check-indicator"><i class="fas fa-check"></i></span>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-slate-800 leading-tight dia-title">23 Diciembre</span>
+                                        <span class="text-[11px] text-slate-500 dia-subtext">Lunes · Día 1</span>
+                                    </div>
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
-                                    <input type="checkbox" name="voluntario_dias[]" value="28 Dic" class="rounded text-blue-600">
-                                    <span>28 Diciembre</span>
+
+                                <!-- 24 Diciembre -->
+                                <label class="voluntario-dia-card btn-clickable" id="card_dia_24">
+                                    <input type="checkbox" name="voluntario_dias[]" value="24 Dic" class="sr-only volunteer-day-checkbox">
+                                    <span class="dia-check-indicator"><i class="fas fa-check"></i></span>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-slate-800 leading-tight dia-title">24 Diciembre</span>
+                                        <span class="text-[11px] text-slate-500 dia-subtext">Martes · Día 2</span>
+                                    </div>
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
-                                    <input type="checkbox" name="voluntario_dias[]" value="29 Dic" class="rounded text-blue-600">
-                                    <span>29 Diciembre</span>
+
+                                <!-- 28 Diciembre -->
+                                <label class="voluntario-dia-card btn-clickable" id="card_dia_28">
+                                    <input type="checkbox" name="voluntario_dias[]" value="28 Dic" class="sr-only volunteer-day-checkbox">
+                                    <span class="dia-check-indicator"><i class="fas fa-check"></i></span>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-slate-800 leading-tight dia-title">28 Diciembre</span>
+                                        <span class="text-[11px] text-slate-500 dia-subtext">Sábado · Día 3</span>
+                                    </div>
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
-                                    <input type="checkbox" name="voluntario_dias[]" value="30 Dic (Fiesta 17h)" class="rounded text-blue-600">
-                                    <span>30 Dic (Fin campus)</span>
+
+                                <!-- 29 Diciembre -->
+                                <label class="voluntario-dia-card btn-clickable" id="card_dia_29">
+                                    <input type="checkbox" name="voluntario_dias[]" value="29 Dic" class="sr-only volunteer-day-checkbox">
+                                    <span class="dia-check-indicator"><i class="fas fa-check"></i></span>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-slate-800 leading-tight dia-title">29 Diciembre</span>
+                                        <span class="text-[11px] text-slate-500 dia-subtext">Domingo · Día 4</span>
+                                    </div>
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-blue-200 bg-blue-50/50 hover:bg-blue-50 cursor-pointer font-medium text-blue-800">
-                                    <input type="checkbox" id="voluntario_todos_dias" value="Todos los días" class="rounded text-blue-600">
-                                    <span>Todos los días</span>
+
+                                <!-- 30 Diciembre -->
+                                <label class="voluntario-dia-card btn-clickable" id="card_dia_30">
+                                    <input type="checkbox" name="voluntario_dias[]" value="30 Dic (Fiesta 17h)" class="sr-only volunteer-day-checkbox">
+                                    <span class="dia-check-indicator"><i class="fas fa-check"></i></span>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-slate-800 leading-tight dia-title">30 Diciembre</span>
+                                        <span class="text-[11px] text-slate-500 dia-subtext">Fin campus (17h)</span>
+                                    </div>
+                                </label>
+
+                                <!-- Todos los días -->
+                                <label class="voluntario-dia-card card-todos-dias btn-clickable" id="label_voluntario_todos_dias">
+                                    <input type="checkbox" id="voluntario_todos_dias" value="Todos los días" class="sr-only">
+                                    <span class="dia-check-indicator"><i class="fas fa-check-double"></i></span>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold leading-tight dia-title flex items-center gap-1">
+                                            <span>Todos los días</span>
+                                            <i class="fas fa-star text-amber-400 text-xs"></i>
+                                        </span>
+                                        <span class="text-[11px] text-slate-500 dia-subtext">Campus completo</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -464,8 +847,8 @@
                 <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-4">
                     <span class="step-badge">4</span>
                     <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Salud, Talleres y Ropa</h2>
-                        <p class="text-sm text-slate-500">Detalles logísticos importantes para la seguridad y dinamización de las sesiones.</p>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Salud y Talleres</h2>
+                        <p class="text-sm text-slate-500">Detalles logísticos importantes sobre alergias, salud y propuestas de talleres.</p>
                     </div>
                 </div>
 
@@ -490,43 +873,6 @@
                             class="w-full p-3.5 rounded-xl border border-slate-200 text-sm field-box focus:outline-none"
                             placeholder="Nombre del taller, tiempo estimado, materiales necesarios o día preferido..."></textarea>
                     </div>
-
-                    <!-- Camiseta Oficial / Recuerdo -->
-                    <div class="border-t border-slate-100 pt-5">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                            <div>
-                                <label class="text-sm font-semibold text-slate-800 block">Camiseta Oficial de Recuerdo del Campus (Opcional)</label>
-                                <p class="text-xs text-slate-500">Si deseas encargar la camiseta conmemorativa, puedes solicitarla aquí.</p>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <label class="inline-flex items-center text-sm gap-1.5 cursor-pointer">
-                                    <input type="radio" name="camiseta" id="camiseta_no" value="No" checked class="text-blue-600">
-                                    <span>No, gracias</span>
-                                </label>
-                                <label class="inline-flex items-center text-sm gap-1.5 cursor-pointer">
-                                    <input type="radio" name="camiseta" id="camiseta_si" value="Sí" class="text-blue-600">
-                                    <span>Sí, encargar</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Selector de talla si elige camiseta -->
-                        <div id="seccion_tallas" class="hidden mt-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                            <label for="talla" class="block text-xs font-semibold text-slate-700 mb-1.5">Selecciona la talla requerida:</label>
-                            <select id="talla" name="talla" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm bg-white">
-                                <option value="" selected disabled>Selecciona una talla...</option>
-                                <option value="Infantil 5-6 años">Infantil (5-6 años)</option>
-                                <option value="Infantil 7-8 años">Infantil (7-8 años)</option>
-                                <option value="Infantil 9-11 años">Infantil (9-11 años)</option>
-                                <option value="Infantil 12-14 años">Infantil (12-14 años)</option>
-                                <option value="Adulto XS">Adulto XS</option>
-                                <option value="Adulto S">Adulto S</option>
-                                <option value="Adulto M">Adulto M</option>
-                                <option value="Adulto L">Adulto L</option>
-                                <option value="Adulto XL">Adulto XL</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -542,16 +888,16 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-3 text-sm text-slate-700">
-                        <div class="flex items-center gap-2 font-medium text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-                            <i class="fas fa-check-circle text-emerald-600 text-lg"></i>
-                            <span><strong>El campus es 100% gratuito</strong> gracias a la asociación y a los voluntarios.</span>
+                    <div class="space-y-3.5 text-sm text-slate-700">
+                        <div class="flex items-center gap-2.5 font-semibold text-emerald-900 bg-emerald-50 p-3.5 rounded-xl border border-emerald-200">
+                            <i class="fas fa-heart text-emerald-600 text-lg flex-shrink-0"></i>
+                            <span>100% Voluntario y Sin Ánimo de Lucro</span>
                         </div>
                         <p class="leading-relaxed">
-                            Solo se solicita una aportación de <strong>5€ por participante</strong> para costear el material didáctico, manualidades y recursos de las actividades.
+                            Todo el equipo de monitores participamos de manera 100 % voluntaria y sin ánimo de lucro. La actividad en sí no tiene un precio de matrícula, pero cada plaza conlleva un coste real de unos 5 € por persona en materiales.
                         </p>
-                        <p class="leading-relaxed">
-                            Asimismo, al ser una asociación sin ánimo de lucro, <strong>se aceptan donaciones voluntarias</strong> de quien desee y pueda colaborar con el sostenimiento de futuros proyectos comunitarios.
+                        <p class="leading-relaxed bg-blue-50/70 p-3.5 rounded-xl border border-blue-100 text-blue-900 font-medium">
+                            Por ello, dependemos exclusivamente de donaciones: tu aportación sugerida de 5 € —así como cualquier donativo extra que puedas realizar voluntariamente— es lo que permite que el campus sea viable.
                         </p>
                     </div>
 
@@ -691,12 +1037,22 @@
                         </div>
                     </div>
 
-                    <!-- Check 5: Autorización médica y de participación -->
-                    <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white">
-                        <input type="checkbox" id="check_medico" name="check_medico" required class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300">
-                        <div class="flex-1">
-                            <label for="check_medico" class="text-sm font-semibold text-slate-800 cursor-pointer block">
-                                Autorización médica y de participación: Autorizo la asistencia del menor al campus y faculto a los coordinadores a tomar las medidas sanitarias o médicas de urgencia oportunas en caso necesario. *
+                    <!-- Check 5: Autorización de Participación en el Campus -->
+                    <div class="p-4 rounded-xl border border-slate-200 bg-white">
+                        <label class="block text-sm font-semibold text-slate-800 mb-1.5">
+                            Autorización de participación en el campus *
+                        </label>
+                        <p class="text-xs text-slate-500 mb-2.5">
+                            Autorizo la asistencia y participación activa del menor en las actividades, dinámicas y talleres del campus.
+                        </p>
+                        <div class="flex items-center gap-5 text-sm">
+                            <label class="inline-flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                                <input type="radio" name="autoriza_participacion" id="autoriza_part_si" value="Sí" required checked class="text-blue-600">
+                                <span>Sí, autorizo</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                                <input type="radio" name="autoriza_participacion" id="autoriza_part_no" value="No" class="text-blue-600">
+                                <span>No autorizo</span>
                             </label>
                         </div>
                     </div>
@@ -723,7 +1079,7 @@
                         <div id="captchaBox" class="select-none flex-shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-900 to-indigo-950 text-yellow-300 font-mono font-extrabold text-2xl tracking-widest shadow-inner border border-blue-700 flex items-center justify-center min-w-[140px]">
                             ----
                         </div>
-                        <button type="button" id="btnRegenerarCaptcha" class="px-4 py-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition font-semibold text-sm flex items-center gap-2" title="Generar un nuevo código">
+                        <button type="button" id="btnRegenerarCaptcha" class="px-4 py-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 border border-blue-200 transition-all font-semibold text-sm flex items-center gap-2 shadow-sm active:scale-95 active:bg-blue-200 active:shadow-inner cursor-pointer" title="Generar un nuevo código">
                             <i class="fas fa-sync-alt" id="iconRegenerar"></i>
                             <span class="hidden sm:inline">Nuevo código</span>
                         </button>
@@ -744,13 +1100,13 @@
 
             <!-- BOTÓN DE ENVÍO Y LIMPIEZA -->
             <div class="text-center pt-2 space-y-3">
-                <button type="submit" id="btnSubmit" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 rounded-2xl bg-gradient-to-r from-blue-700 to-blue-800 text-white font-bold text-lg shadow-lg hover:from-blue-800 hover:to-blue-900 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="submit" id="btnSubmit" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 rounded-2xl bg-gradient-to-r from-blue-700 to-blue-800 text-white font-bold text-lg shadow-lg hover:from-blue-800 hover:to-blue-900 hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:scale-95 active:translate-y-1 active:shadow-inner active:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
                     <i class="fas fa-paper-plane"></i>
                     <span>Completar Inscripción</span>
                 </button>
 
                 <div>
-                    <button type="button" id="btnLimpiarManual" class="text-xs text-slate-400 hover:text-slate-600 underline transition inline-flex items-center gap-1.5 py-1">
+                    <button type="button" id="btnLimpiarManual" class="text-xs text-slate-500 hover:text-slate-800 underline transition-all inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg hover:bg-slate-100 active:scale-95 active:bg-slate-200 cursor-pointer">
                         <i class="fas fa-redo-alt"></i> Limpiar datos del formulario y empezar de nuevo
                     </button>
                 </div>
@@ -761,9 +1117,9 @@
 
         <!-- Pie de Página Informativo -->
         <footer class="mt-16 text-center text-slate-500 text-xs sm:text-sm space-y-2 border-t border-slate-200 pt-8">
-            <p class="font-bold text-slate-700">Campus de Navidad 2026 · Construyendo Comunidad</p>
-            <p>Organizado por la Asociación sin ánimo de lucro · Almería</p>
-            <p>Contacto de coordinación: <a href="mailto:ael.garrucha@bahai.es" class="text-blue-600 hover:underline">ael.garrucha@bahai.es</a></p>
+            <p class="font-bold text-slate-700">VII Campus de Invierno · «Sembrando Futuro» (Edición Navidad)</p>
+            <p>Organiza: <strong>Instituto Bahá'í de Capacitación para el Desarrollo Comunitario · Garrucha</strong></p>
+            <p>Contacto de coordinación: <a href="mailto:ael.garrucha@bahai.es" class="text-blue-600 hover:underline font-medium">ael.garrucha@bahai.es</a></p>
         </footer>
     </main>
 
@@ -787,7 +1143,7 @@
                 <div class="font-bold text-slate-800 mb-1"><i class="fas fa-wallet mr-1 text-slate-500"></i> Si escogiste Bizum:</div>
                 <p>Envía tu aportación al número: <strong class="text-blue-700">634541119</strong> (Eliana B.R.)</p>
                 <div class="flex items-center gap-2 mt-2">
-                    <button type="button" id="btnCopiarBizum" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:bg-slate-100 text-slate-700 flex items-center gap-1.5">
+                    <button type="button" id="btnCopiarBizum" class="px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:bg-slate-50 hover:border-slate-400 text-slate-700 flex items-center gap-1.5 transition-all shadow-sm active:scale-95 active:bg-slate-200 active:shadow-inner cursor-pointer">
                         <i class="fas fa-copy"></i> Copiar Teléfono
                     </button>
                     <span id="bizumCopiadoTxt" class="text-xs text-emerald-600 font-bold hidden">¡Copiado!</span>
@@ -795,10 +1151,10 @@
             </div>
 
             <div class="space-y-2">
-                <button type="button" id="btnCerrarModal" class="w-full py-3.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl text-sm transition">
+                <button type="button" id="btnCerrarModal" class="w-full py-3.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl text-sm transition-all shadow-md hover:shadow-lg active:scale-95 active:bg-blue-900 active:shadow-inner cursor-pointer">
                     Entendido y Cerrar
                 </button>
-                <button type="button" id="btnNuevaInscripcion" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition">
+                <button type="button" id="btnNuevaInscripcion" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition-all border border-slate-200 active:scale-95 active:bg-slate-300 active:shadow-inner cursor-pointer">
                     Realizar otra inscripción
                 </button>
             </div>
@@ -851,11 +1207,7 @@
         const errCaptcha = document.getElementById('err-captcha');
         let codigoCaptchaActual = '';
 
-        // Camisetas
-        const camisetaSi = document.getElementById('camiseta_si');
-        const camisetaNo = document.getElementById('camiseta_no');
-        const seccionTallas = document.getElementById('seccion_tallas');
-        const selectTalla = document.getElementById('talla');
+        // Camisetas: No requeridas en esta edición
 
         let participantCount = 0;
 
@@ -888,14 +1240,15 @@
             return edad;
         }
 
-        // Determinar grupo según edad
+        // Determinar grupo según edad (Primaria en dos tramos sin edades entre paréntesis)
         function sugerirGrupoPorEdad(edad) {
             if (edad === null || isNaN(edad)) return '';
-            if (edad >= 3 && edad <= 5) return 'Etapa Infantil (3-5 años)';
-            if (edad >= 6 && edad <= 10) return '1º a 5º de Primaria (~6-10 años)';
-            if (edad >= 11 && edad <= 14) return '6º Primaria a 3º ESO (~11-14 años)';
-            if (edad >= 15) return 'A partir de 4º ESO (15+ años) - Voluntariado';
-            return 'Etapa Infantil (3-5 años)';
+            if (edad >= 3 && edad <= 5) return 'Etapa Infantil';
+            if (edad >= 6 && edad <= 8) return '1º a 3º de Primaria';
+            if (edad >= 9 && edad <= 10) return '4º a 5º de Primaria';
+            if (edad >= 11 && edad <= 14) return '6º de Primaria a 3º de la ESO';
+            if (edad >= 15) return 'A partir de 4º de la ESO';
+            return 'Etapa Infantil';
         }
 
         // Verificar si hay algún participante en etapa infantil para exigir el compromiso de acompañamiento
@@ -949,7 +1302,7 @@
                     <span class="inline-flex items-center gap-2 text-sm font-bold text-slate-800">
                         <i class="fas fa-user text-blue-600"></i> Participante <span class="participant-number"></span>
                     </span>
-                    <button type="button" class="btn-remove-part text-slate-400 hover:text-red-500 text-sm font-semibold p-1 transition" title="Eliminar participante">
+                    <button type="button" class="btn-remove-part text-slate-400 hover:text-red-500 hover:bg-red-50 text-sm font-semibold px-2 py-1 rounded-lg transition-all active:scale-90 active:bg-red-100 active:text-red-700 cursor-pointer" title="Eliminar participante">
                         <i class="fas fa-trash-alt mr-1"></i> Eliminar
                     </button>
                 </div>
@@ -977,10 +1330,11 @@
                         </div>
                         <select name="participante_grupo[]" required class="participant-group-select w-full p-2.5 rounded-xl border border-slate-200 bg-white text-sm field-box focus:outline-none">
                             <option value="" disabled selected>Selecciona o calcula por fecha de nacimiento...</option>
-                            <option value="Etapa Infantil (3-5 años)">Etapa Infantil (3-5 años) — Acompañado obligatoriamente de un adulto</option>
-                            <option value="1º a 5º de Primaria (~6-10 años)">1º a 5º de Primaria (~6-10 años) — Autónomo</option>
-                            <option value="6º Primaria a 3º ESO (~11-14 años)">6º Primaria a 3º de la ESO (~11-14 años) — Autónomo</option>
-                            <option value="A partir de 4º ESO (15+ años) - Voluntariado">A partir de 4º ESO (15+ años) — Voluntariado y Formación</option>
+                            <option value="Etapa Infantil">Etapa Infantil — Acompañado obligatoriamente de un adulto</option>
+                            <option value="1º a 3º de Primaria">1º a 3º de Primaria — Autónomo</option>
+                            <option value="4º a 5º de Primaria">4º a 5º de Primaria — Autónomo</option>
+                            <option value="6º de Primaria a 3º de la ESO">6º de Primaria a 3º de la ESO — Autónomo</option>
+                            <option value="A partir de 4º de la ESO">A partir de 4º de la ESO — Voluntariado y Formación</option>
                         </select>
                     </div>
 
@@ -1067,12 +1421,74 @@
             }
         });
 
-        voluntarioTodosDias.addEventListener('change', () => {
+        // Función para sincronizar estados visuales, badges y contador de días de voluntariado
+        function actualizarEstadoDiasVoluntariado() {
             const diasChecks = document.querySelectorAll('input[name="voluntario_dias[]"]');
+            const totalDias = diasChecks.length;
+            let checkedCount = 0;
+            const checkedValues = [];
+
             diasChecks.forEach(ch => {
-                ch.checked = voluntarioTodosDias.checked;
+                const card = ch.closest('.voluntario-dia-card');
+                if (ch.checked) {
+                    checkedCount++;
+                    let label = ch.value;
+                    if (label.includes('30 Dic')) label = '30 Dic';
+                    checkedValues.push(label);
+                    if (card) card.classList.add('is-selected');
+                } else {
+                    if (card) card.classList.remove('is-selected');
+                }
+            });
+
+            const cardTodos = document.getElementById('label_voluntario_todos_dias');
+            if (voluntarioTodosDias && cardTodos) {
+                if (checkedCount === totalDias && totalDias > 0) {
+                    voluntarioTodosDias.checked = true;
+                    cardTodos.classList.add('is-selected');
+                } else {
+                    voluntarioTodosDias.checked = false;
+                    cardTodos.classList.remove('is-selected');
+                }
+            }
+
+            const counterEl = document.getElementById('voluntario_dias_counter_text');
+            const counterBox = document.getElementById('voluntario_dias_counter');
+            if (counterEl && counterBox) {
+                if (checkedCount === 0) {
+                    counterEl.textContent = '0 días seleccionados';
+                    counterBox.className = 'inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 border border-slate-200 transition-all';
+                } else if (checkedCount === totalDias) {
+                    counterEl.textContent = '⭐ Todos los días (5 de 5 seleccionados)';
+                    counterBox.className = 'inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm transition-all';
+                } else if (checkedCount === 1) {
+                    counterEl.textContent = `1 día seleccionado (${checkedValues[0]})`;
+                    counterBox.className = 'inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-300 shadow-sm transition-all';
+                } else {
+                    counterEl.textContent = `${checkedCount} días seleccionados (${checkedValues.join(', ')})`;
+                    counterBox.className = 'inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-300 shadow-sm transition-all';
+                }
+            }
+        }
+
+        // Listener en cada checkbox individual de día
+        document.querySelectorAll('input[name="voluntario_dias[]"]').forEach(ch => {
+            ch.addEventListener('change', () => {
+                actualizarEstadoDiasVoluntariado();
             });
         });
+
+        // Listener en "Todos los días"
+        if (voluntarioTodosDias) {
+            voluntarioTodosDias.addEventListener('change', () => {
+                const marcarTodos = voluntarioTodosDias.checked;
+                const diasChecks = document.querySelectorAll('input[name="voluntario_dias[]"]');
+                diasChecks.forEach(ch => {
+                    ch.checked = marcarTodos;
+                });
+                actualizarEstadoDiasVoluntariado();
+            });
+        }
 
         // Eventos de donación
         donacionSelect.addEventListener('change', () => {
@@ -1086,23 +1502,14 @@
         });
         donacionCustom.addEventListener('input', actualizarCalculos);
 
-        // Eventos de camisetas
-        camisetaSi.addEventListener('change', () => {
-            if (camisetaSi.checked) {
-                seccionTallas.classList.remove('hidden');
-                selectTalla.setAttribute('required', 'required');
-            }
-        });
-        camisetaNo.addEventListener('change', () => {
-            if (camisetaNo.checked) {
-                seccionTallas.classList.add('hidden');
-                selectTalla.removeAttribute('required');
-                selectTalla.value = '';
-            }
-        });
+        // Camisetas: No aplican en esta edición
 
-        // Copiar Bizum al portapapeles
+        // Copiar Bizum al portapapeles con feedback visual en el propio botón
         btnCopiarBizum.addEventListener('click', () => {
+            btnCopiarBizum.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
+            setTimeout(() => {
+                btnCopiarBizum.classList.remove('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
+            }, 1500);
             navigator.clipboard.writeText('634541119').then(() => {
                 bizumCopiadoTxt.classList.remove('hidden');
                 setTimeout(() => bizumCopiadoTxt.classList.add('hidden'), 3000);
@@ -1145,12 +1552,11 @@
             seccionVoluntariado.classList.add('hidden');
             document.querySelectorAll('input[name="voluntario_dias[]"]').forEach(ch => ch.checked = false);
             if (voluntarioTodosDias) voluntarioTodosDias.checked = false;
+            actualizarEstadoDiasVoluntariado();
 
-            // 4. Resetear camisetas y tallas
-            camisetaNo.checked = true;
-            seccionTallas.classList.add('hidden');
-            selectTalla.removeAttribute('required');
-            selectTalla.value = '';
+            // 4. Resetear autorizaciones de participación e imagen a valor afirmativo
+            const radioPartSi = document.getElementById('autoriza_part_si');
+            if (radioPartSi) radioPartSi.checked = true;
 
             // 5. Resetear etapa infantil
             checkInfantilBox.classList.add('hidden');
@@ -1207,6 +1613,11 @@
         }
 
         btnRegenerarCaptcha.addEventListener('click', () => {
+            const icon = document.getElementById('iconRegenerar');
+            if (icon) {
+                icon.classList.add('fa-spin');
+                setTimeout(() => icon.classList.remove('fa-spin'), 600);
+            }
             generarCaptcha();
             showToast('Nuevo código de seguridad generado.', 'info');
         });
@@ -1250,11 +1661,43 @@
             }
         });
 
+        // Habilitar estado :active en iOS Safari (requerido por WebKit)
+        document.addEventListener('touchstart', function () {}, { passive: true });
+
+        // Efecto Ripple visual de luz en TODOS los botones al presionar (pointerdown / touch)
+        document.addEventListener('pointerdown', function (e) {
+            const btn = e.target.closest('button, input[type="submit"], input[type="button"], .btn-clickable');
+            if (!btn || btn.disabled) return;
+
+            const rect = btn.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.className = 'click-ripple';
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${(e.clientX || (rect.left + rect.width / 2)) - rect.left - size / 2}px`;
+            ripple.style.top = `${(e.clientY || (rect.top + rect.height / 2)) - rect.top - size / 2}px`;
+
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Efecto rebote elástico visual (.btn-clicked) en TODOS los botones al soltar el clic
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('button, input[type="submit"], input[type="button"], .btn-clickable');
+            if (btn && !btn.disabled) {
+                btn.classList.remove('btn-clicked');
+                void btn.offsetWidth;
+                btn.classList.add('btn-clicked');
+                setTimeout(() => btn.classList.remove('btn-clicked'), 400);
+            }
+        });
+
         // Inicializar con 1 participante por defecto y código Captcha al cargar el DOM
         document.addEventListener('DOMContentLoaded', () => {
             createParticipantCard();
             btnAddParticipant.addEventListener('click', createParticipantCard);
             generarCaptcha();
+            actualizarEstadoDiasVoluntariado();
         });
 
         // Envío del Formulario
@@ -1363,13 +1806,6 @@
                 marcarErrorCampo(tutorEmail, 'Introduce un correo electrónico válido para recibir la confirmación');
             }
 
-            // C. Validar Camiseta si se solicita
-            if (camisetaSi.checked) {
-                if (!selectTalla.value || selectTalla.value === '') {
-                    marcarErrorCampo(selectTalla, 'Por favor, selecciona una talla de camiseta');
-                }
-            }
-
             // D. Validar Autorizaciones Obligatorias
             const checkCompromiso = document.getElementById('compromiso');
             if (!checkCompromiso.checked) {
@@ -1395,10 +1831,13 @@
                 marcarErrorCard(radioImagenCard, 'Por favor, selecciona si autorizas o no la toma de imágenes');
             }
 
-            // Autorización Médica
-            const checkMedico = document.getElementById('check_medico');
-            if (!checkMedico.checked) {
-                marcarErrorCard(checkMedico.closest('div.border'), 'Es obligatoria la autorización médica y de primeros auxilios');
+            // Autorización de Participación (Radio)
+            const radioPartChecked = form.querySelector('input[name="autoriza_participacion"]:checked');
+            const radioPartCard = form.querySelector('input[name="autoriza_participacion"]').closest('.rounded-xl.border');
+            if (!radioPartChecked) {
+                marcarErrorCard(radioPartCard, 'Por favor, selecciona si autorizas o no la participación en el campus');
+            } else if (radioPartChecked.value === 'No') {
+                marcarErrorCard(radioPartCard, 'Para completar la inscripción es necesario autorizar la participación del menor en las actividades');
             }
 
             // E. Validar Código de Seguridad Anti-Bot (Captcha)
@@ -1454,10 +1893,9 @@
             formData.append('tutor_telefono', document.getElementById('tutor_telefono').value.trim());
             formData.append('tutor_email', document.getElementById('tutor_email').value.trim());
 
-            // Camisetas
-            const camisetaVal = document.querySelector('input[name="camiseta"]:checked').value;
-            formData.append('camiseta', camisetaVal);
-            formData.append('talla_camiseta', (camisetaVal === 'Sí' ? selectTalla.value : 'Ninguna'));
+            // Camisetas (No solicitadas en esta edición)
+            formData.append('camiseta', 'No');
+            formData.append('talla_camiseta', 'No solicitada');
 
             // Salud y talleres
             formData.append('medicas_observaciones', document.getElementById('medicas').value.trim() || 'Ninguna');
@@ -1493,7 +1931,10 @@
             formData.append('compromiso_aceptado', document.getElementById('compromiso').checked ? 'Sí' : 'No');
             formData.append('llevar_camiseta_blanca', document.getElementById('check_camiseta').checked ? 'Sí' : 'No');
             formData.append('autoriza_imagen', document.querySelector('input[name="autoriza_imagen"]:checked').value);
-            formData.append('autorizacion_medica', document.getElementById('check_medico').checked ? 'Sí' : 'No');
+            const radioPart = form.querySelector('input[name="autoriza_participacion"]:checked');
+            const valorPart = radioPart ? radioPart.value : 'Sí';
+            formData.append('autorizacion_participacion', valorPart);
+            formData.append('autorizacion_medica', valorPart); // Para compatibilidad total con backend GAS
             formData.append('acompanamiento_infantil_aceptado', (checkInfantil.checked ? 'Sí' : 'No aplica'));
             formData.append('captcha_verificado', 'Sí');
 

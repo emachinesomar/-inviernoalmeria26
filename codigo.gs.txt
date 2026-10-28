@@ -72,7 +72,7 @@ function doPost(e) {
     var compromisoConvivencia = e.parameter.compromiso_aceptado || 'No';
     var compromisoRopaTalleres = e.parameter.llevar_camiseta_blanca || 'No';
     var autorizaImagen = e.parameter.autoriza_imagen || 'No';
-    var autorizacionMedica = e.parameter.autorizacion_medica || 'No';
+    var autorizacionParticipacion = e.parameter.autorizacion_participacion || e.parameter.autorizacion_medica || 'No';
     var acompanamientoInfantil = e.parameter.acompanamiento_infantil_aceptado || 'No aplica';
 
     // 8. Filtro Anti-Spam (Honeypot)
@@ -93,7 +93,7 @@ function doPost(e) {
     }
 
     // Validaciones obligatorias de campos clave
-    if (!tutorNombre || !tutorDni || !tutorTelefono || !tutorEmail || compromisoConvivencia !== 'Sí' || autorizacionMedica !== 'Sí') {
+    if (!tutorNombre || !tutorDni || !tutorTelefono || !tutorEmail || compromisoConvivencia !== 'Sí' || autorizacionParticipacion !== 'Sí') {
       return ContentService.createTextOutput(JSON.stringify({
         success: false,
         message: 'Faltan campos obligatorios del tutor o autorizaciones reglamentarias.'
@@ -137,7 +137,7 @@ function doPost(e) {
         'Compromiso Convivencia',
         'Compromiso Ropa Talleres',
         'Autorización de Imagen',
-        'Autorización Médica'
+        'Autorización de Participación'
       ]);
     }
 
@@ -182,7 +182,7 @@ function doPost(e) {
       compromisoConvivencia,
       compromisoRopaTalleres,
       autorizaImagen,
-      autorizacionMedica
+      autorizacionParticipacion
     ]);
 
     // Opcional: Si en la hoja existe una pestaña llamada 'Participantes', guardar cada niño individualmente para pasar lista
@@ -259,7 +259,7 @@ function doGet(e) {
  * (Tanto en HTML con diseño profesional como en texto plano limpio, 100% libre de emojis conflictivos)
  */
 function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres, nacimientos, grupos, adultosAcompanantes, costeMaterial, donacionVoluntaria, totalEstimado, metodoPago, voluntarioActivo, voluntarioDias) {
-  var asunto = 'Inscripción confirmada [' + localizador + '] - Campus de Navidad Almería';
+  var asunto = 'Inscripción confirmada [' + localizador + '] - VII Campus de Invierno «Sembrando Futuro»';
 
   // 1. Lista de participantes para HTML
   var participantesHtml = nombres.map(function(nombre, index) {
@@ -279,11 +279,12 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
 
   // 3. Versión de Texto Plano (para notificaciones de móvil, previsualizaciones y clientes de correo sin HTML)
   var cuerpoTextoPlano = 
-    'CAMPUS DE NAVIDAD 2026 - ALMERÍA\n' +
+    'VII CAMPUS DE INVIERNO «SEMBRANDO FUTURO» (EDICIÓN NAVIDAD)\n' +
+    'Organiza: Instituto Bahá\'í de Capacitación para el Desarrollo Comunitario (Garrucha)\n' +
     'Inscripción Confirmada | Localizador: ' + localizador + '\n\n' +
     'Estimado/a ' + tutorNombre + ',\n\n' +
-    'Hemos registrado correctamente la inscripción para el Campus de Navidad 2026.\n' +
-    'Nos alegra enormemente contar con su participación para construir comunidad en estos días de convivencia.\n\n' +
+    'Hemos registrado correctamente la inscripción para el VII Campus de Invierno «Sembrando Futuro».\n' +
+    'Nos alegra enormemente contar con su participación para construir comunidad en estos días de convivencia intercultural.\n\n' +
     'FECHAS DEL CAMPUS:\n' +
     '• Días de actividad: 23, 24, 28, 29 y 30 de Diciembre.\n' +
     '• Gran Fiesta de Fin de Campus: Día 30 de Diciembre a las 17:00 h (5:00 PM).\n\n' +
@@ -306,7 +307,7 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
     'Los participantes de la etapa infantil deben asistir siempre acompañados de un adulto responsable durante las 5 horas del campus.\n' +
     'Se recomienda asistir con ropa cómoda apta para talleres y manualidades.\n\n' +
     'Para cualquier consulta, puedes responder a este correo o escribir a ael.garrucha@bahai.es\n\n' +
-    'Campus de Navidad 2026 · Construyendo Comunidad';
+    'VII Campus de Invierno · «Sembrando Futuro» · Garrucha';
 
   // 4. Versión HTML (diseño limpio con tipografía y tarjetas, sin iconos ni emojis propensos a fallar)
   var cuerpoHTML = '<!DOCTYPE html>' +
@@ -321,13 +322,13 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
         // Encabezado
         '<div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 20px;">' +
           '<span style="display: inline-block; background-color: #dbeafe; color: #1d4ed8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">' +
-            'Asociación Sin Ánimo de Lucro' +
+            'Instituto Bahá\'í &bull; Garrucha' +
           '</span>' +
           '<h2 style="color: #1e3a8a; margin: 12px 0 6px 0; font-size: 24px; font-weight: 700;">' +
             'Inscripción Confirmada' +
           '</h2>' +
           '<p style="color: #64748b; margin: 0; font-size: 14px;">' +
-            'Campus de Navidad 2026 &bull; Localizador: <strong style="color: #1e40af; font-family: monospace; font-size: 16px;">' + localizador + '</strong>' +
+            'VII Campus de Invierno &laquo;Sembrando Futuro&raquo; &bull; Localizador: <strong style="color: #1e40af; font-family: monospace; font-size: 16px;">' + localizador + '</strong>' +
           '</p>' +
         '</div>' +
 
@@ -336,7 +337,7 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
           'Estimado/a <strong>' + tutorNombre + '</strong>,' +
         '</p>' +
         '<p style="font-size: 15px; line-height: 1.5; margin: 0 0 18px 0; color: #334155;">' +
-          'Hemos registrado correctamente la inscripción para el <strong>Campus de Navidad</strong>. Nos alegra enormemente contar con su participación para construir comunidad en estos días de convivencia.' +
+          'Hemos registrado correctamente la inscripción para el <strong>VII Campus de Invierno &laquo;Sembrando Futuro&raquo; (Edición Navidad)</strong>. Nos alegra enormemente contar con su participación para reflexionar y colaborar en el desarrollo comunitario de nuestro pueblo.' +
         '</p>' +
 
         // Bloque 1: Fechas y Horarios
@@ -465,8 +466,8 @@ function testDoPost() {
       tutor_dni: '12345678Z',
       tutor_telefono: '612345678',
       tutor_email: Session.getActiveUser().getEmail() || 'prueba@ejemplo.com',
-      camiseta: 'Sí',
-      talla_camiseta: 'Infantil 7-8 años',
+      camiseta: 'No',
+      talla_camiseta: 'No solicitada',
       medicas_observaciones: 'Alergia al gluten y asma leve',
       taller_propuesto: 'Taller de manualidades navideñas',
       voluntario_activo: 'Sí',
@@ -479,6 +480,7 @@ function testDoPost() {
       compromiso_aceptado: 'Sí',
       llevar_camiseta_blanca: 'Sí',
       autoriza_imagen: 'Sí',
+      autorizacion_participacion: 'Sí',
       autorizacion_medica: 'Sí',
       acompanamiento_infantil_aceptado: 'Sí',
       captcha_verificado: 'Sí',
@@ -494,8 +496,8 @@ function testDoPost() {
         '2016-09-25'
       ],
       'participante_grupo[]': [
-        'Etapa Infantil (3-5 años)',
-        '1º a 5º de Primaria (~6-10 años)'
+        'Etapa Infantil',
+        '1º a 3º de Primaria'
       ],
       'participante_adulto_acompanante[]': [
         'María García López (Madre - 5 horas)',
