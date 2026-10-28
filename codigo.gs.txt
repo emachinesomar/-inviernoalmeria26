@@ -274,42 +274,42 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
     var acompTxt = (adultosAcompanantes && adultosAcompanantes[index] && adultosAcompanantes[index] !== 'No aplica')
       ? '\n   [Acompañante adulto obligatorio 5h: ' + adultosAcompanantes[index] + ']'
       : '';
-    return '• ' + nombre + ' (' + nacimientos[index] + ' - ' + grupos[index] + ')' + acompTxt;
+    return '- ' + nombre + ' (' + nacimientos[index] + ' - ' + grupos[index] + ')' + acompTxt;
   }).join('\n');
 
-  // 3. Versión de Texto Plano (para notificaciones de móvil, previsualizaciones y clientes de correo sin HTML)
+  // 3. Versión de Texto Plano (100% ASCII seguro para notificaciones móviles y clientes sin HTML)
   var cuerpoTextoPlano = 
-    'VII CAMPUS DE INVIERNO «SEMBRANDO FUTURO» (EDICIÓN NAVIDAD)\n' +
+    'VII CAMPUS DE INVIERNO "SEMBRANDO FUTURO" (EDICIÓN NAVIDAD)\n' +
     'Organiza: Instituto Bahá\'í de Capacitación para el Desarrollo Comunitario (Garrucha)\n' +
     'Inscripción Confirmada | Localizador: ' + localizador + '\n\n' +
     'Estimado/a ' + tutorNombre + ',\n\n' +
-    'Hemos registrado correctamente la inscripción para el VII Campus de Invierno «Sembrando Futuro».\n' +
+    'Hemos registrado correctamente la inscripción para el VII Campus de Invierno "Sembrando Futuro".\n' +
     'Nos alegra enormemente contar con su participación para construir comunidad en estos días de convivencia intercultural.\n\n' +
     'FECHAS DEL CAMPUS:\n' +
-    '• Días de actividad: 23, 24, 28, 29 y 30 de Diciembre.\n' +
-    '• Gran Fiesta de Fin de Campus: Día 30 de Diciembre a las 17:00 h (5:00 PM).\n\n' +
+    '- Días de actividad: 23, 24, 28, 29 y 30 de Diciembre.\n' +
+    '- Gran Fiesta de Fin de Campus: Día 30 de Diciembre a las 17:00 h (5:00 PM).\n\n' +
     'PARTICIPANTES INSCRITOS:\n' +
     participantesTextoPlano + '\n\n' +
     'RESUMEN DE APORTACIÓN Y MATERIAL:\n' +
-    '• Asistencia al campus: ¡100% Gratuita!\n' +
-    '• Material de talleres (5€/participante): ' + costeMaterial + '\n' +
-    (donacionVoluntaria !== '0€' ? ('• Donación voluntaria para el proyecto: ' + donacionVoluntaria + '\n') : '') +
-    '• Total aportación estimada: ' + totalEstimado + '\n' +
-    '• Método de abono seleccionado: ' + metodoPago + '\n\n' +
+    '- Asistencia al campus: ¡100% Gratuita!\n' +
+    '- Material de talleres (5€/participante): ' + costeMaterial + '\n' +
+    (donacionVoluntaria !== '0€' ? ('- Donación voluntaria para el proyecto: ' + donacionVoluntaria + '\n') : '') +
+    '- Total aportación estimada: ' + totalEstimado + '\n' +
+    '- Método de abono seleccionado: ' + metodoPago + '\n\n' +
     'OPCIONES PARA REALIZAR LA APORTACIÓN:\n' +
     '1. Bizum: Al número 634541119 (Eliana B.R.) indicando concepto: "' + localizador + ' - ' + tutorNombre + '"\n' +
     '2. En efectivo: El primer día de campus (por favor, acudir 15 minutos antes).\n\n' +
     (voluntarioActivo === 'Sí' ? 
       ('COLABORACIÓN COMO VOLUNTARIO/A:\n' +
-       '• Has indicado disponibilidad para los días: ' + voluntarioDias + '\n' +
-       '• El equipo organizador se pondrá en contacto contigo. ¡Muchísimas gracias por tu apoyo!\n\n') : '') +
+       '- Has indicado disponibilidad para los días: ' + voluntarioDias + '\n' +
+       '- El equipo organizador se pondrá en contacto contigo. ¡Muchísimas gracias por tu apoyo!\n\n') : '') +
     'RECORDATORIO IMPORTANTE:\n' +
     'Los participantes de la etapa infantil deben asistir siempre acompañados de un adulto responsable durante las 5 horas del campus.\n' +
     'Se recomienda asistir con ropa cómoda apta para talleres y manualidades.\n\n' +
     'Para cualquier consulta, puedes responder a este correo o escribir a ael.garrucha@bahai.es\n\n' +
-    'VII Campus de Invierno · «Sembrando Futuro» · Garrucha';
+    'VII Campus de Invierno · Sembrando Futuro · Garrucha';
 
-  // 4. Versión HTML (diseño limpio con tipografía y tarjetas, sin iconos ni emojis propensos a fallar)
+  // 4. Versión HTML (diseño limpio con logotipo oficial, tipografía y tarjetas, 0% emojis ni caracteres propensos a mojibake)
   var cuerpoHTML = '<!DOCTYPE html>' +
     '<html>' +
     '<head>' +
@@ -319,8 +319,9 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
     '<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif;">' +
       '<div style="max-width: 620px; margin: 20px auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #1e293b;">' +
 
-        // Encabezado
+        // Encabezado con Logotipo Oficial
         '<div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 20px;">' +
+          '<img src="https://institutobahaigarrucha.es/logo.png" alt="Instituto Bahá\'í" width="75" height="75" style="display: block; margin: 0 auto 12px auto; max-width: 75px; height: auto; border: 0;">' +
           '<span style="display: inline-block; background-color: #dbeafe; color: #1d4ed8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">' +
             'Instituto Bahá\'í &bull; Garrucha' +
           '</span>' +
@@ -342,20 +343,22 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
 
         // Bloque 1: Fechas y Horarios
         '<div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; border-radius: 8px; margin: 20px 0;">' +
-          '<h4 style="margin: 0 0 8px 0; color: #1e40af; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">' +
+          '<div style="display: inline-block; background-color: #dbeafe; color: #1e40af; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 6px; margin-bottom: 8px;">CALENDARIO</div>' +
+          '<h4 style="margin: 0 0 8px 0; color: #1e40af; font-size: 15px; font-weight: 700;">' +
             'Fechas del Campus' +
           '</h4>' +
           '<p style="margin: 4px 0; font-size: 14px; color: #1e293b;">' +
             '<strong>Días de actividad:</strong> 23, 24, 28, 29 y 30 de Diciembre.' +
           '</p>' +
-          '<p style="margin: 6px 0 0 0; font-size: 14px; color: #b45309; font-weight: 600;">' +
-            'Fiesta de Fin de Campus: Día 30 de Diciembre a las 17:00 h (5:00 PM).' +
-          '</p>' +
+          '<div style="margin-top: 8px; padding: 8px 12px; background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; color: #92400e; font-size: 13px; font-weight: 600;">' +
+            'Gran Fiesta de Fin de Campus: Día 30 de Diciembre a las 17:00 h (5:00 PM).' +
+          '</div>' +
         '</div>' +
 
         // Bloque 2: Participantes
         '<div style="margin: 20px 0;">' +
-          '<h4 style="color: #0f172a; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">' +
+          '<div style="display: inline-block; background-color: #f1f5f9; color: #475569; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 6px; margin-bottom: 8px;">INSCRIPCIONES</div>' +
+          '<h4 style="color: #0f172a; margin: 0 0 10px 0; font-size: 15px; font-weight: 700;">' +
             'Participantes Inscritos' +
           '</h4>' +
           '<ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #334155; line-height: 1.6;">' +
@@ -365,7 +368,8 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
 
         // Bloque 3: Aportación y Materiales
         '<div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 20px 0;">' +
-          '<h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">' +
+          '<div style="display: inline-block; background-color: #f1f5f9; color: #475569; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 6px; margin-bottom: 8px;">ECONOMÍA Y MATERIAL</div>' +
+          '<h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 15px; font-weight: 700;">' +
             'Resumen de Aportación y Material' +
           '</h4>' +
           '<table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #334155;">' +
@@ -398,6 +402,7 @@ function enviarCorreoConfirmacion(localizador, tutorNombre, tutorEmail, nombres,
         // Bloque 4: Voluntariado si aplica
         (voluntarioActivo === 'Sí' ? 
           '<div style="background-color: #fefce8; border-left: 4px solid #eab308; padding: 12px 15px; border-radius: 6px; margin: 20px 0; font-size: 13px; color: #713f12; line-height: 1.5;">' +
+            '<div style="display: inline-block; background-color: #fef08a; color: #854d0e; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px;">VOLUNTARIADO</div><br>' +
             '<strong>Colaboración como Voluntario/a:</strong> Has indicado disponibilidad en: <strong>' + voluntarioDias + '</strong>. ¡Muchísimas gracias por tu espíritu de servicio! El equipo de coordinación se pondrá en contacto contigo.' +
           '</div>' : '') +
 
